@@ -1,0 +1,801 @@
+# Tnvios UI/UX Brief
+
+Version: 1.0
+
+Status: Product Design Foundation
+
+---
+
+# Vision
+
+Design the world's most intuitive business operating system.
+
+Tnvios should feel:
+
+* Simpler than SAP
+* More powerful than Odoo
+* More connected than Salesforce
+* More modern than traditional ERP software
+* AI-first without being AI-dependent
+
+The platform should serve organizations ranging from startups to global enterprises.
+
+---
+
+# Design Principles
+
+## 1. Context First
+
+Users should only see what matters to them.
+
+A CEO should not see payroll forms.
+
+An employee should not see treasury dashboards.
+
+A vendor should not see CRM pipelines.
+
+The interface adapts based on role and context.
+
+---
+
+## 2. One Platform, Many Experiences
+
+Tnvios is one application.
+
+However each user experiences a different product.
+
+Examples:
+
+Chairman → Executive Workspace
+
+HR Manager → HR Workspace
+
+Employee → Employee Workspace
+
+Customer → Customer Portal
+
+Vendor → Vendor Portal
+
+Partner → Partner Portal
+
+---
+
+## 3. AI Everywhere
+
+AI is not a separate screen.
+
+AI exists throughout the platform.
+
+Examples:
+
+Generate reports
+
+Explain metrics
+
+Find documents
+
+Create workflows
+
+Answer questions
+
+Users should interact with AI naturally.
+
+---
+
+## 4. Dashboard Driven
+
+Every role starts from a dashboard.
+
+The dashboard becomes the operating center.
+
+No user should need to navigate deeply for common actions.
+
+---
+
+## 5. Enterprise Simplicity
+
+Avoid:
+
+Complex ERP interfaces
+
+Huge menu trees
+
+Dense tables everywhere
+
+Too many clicks
+
+Prioritize:
+
+Clear navigation
+
+Progressive disclosure
+
+Smart defaults
+
+Modern layouts
+
+---
+
+# User Personas
+
+## Group Executive
+
+Examples:
+
+Chairman
+
+CEO
+
+Board Member
+
+Primary Goals:
+
+Strategy
+
+Growth
+
+Risk
+
+Performance
+
+Needs:
+
+High-level dashboards
+
+Forecasting
+
+Business insights
+
+AI recommendations
+
+---
+
+## Business Unit Leader
+
+Examples:
+
+Division CEO
+
+General Manager
+
+Primary Goals:
+
+Operations
+
+Revenue
+
+Profitability
+
+Needs:
+
+Business dashboards
+
+Project visibility
+
+Performance metrics
+
+---
+
+## Department Manager
+
+Examples:
+
+HR Manager
+
+Finance Manager
+
+Sales Manager
+
+Needs:
+
+Department KPIs
+
+Approvals
+
+Workflows
+
+Reports
+
+---
+
+## Employee
+
+Needs:
+
+Tasks
+
+Calendar
+
+Documents
+
+Approvals
+
+Communication
+
+AI assistant
+
+---
+
+## Customer
+
+Needs:
+
+Orders
+
+Projects
+
+Invoices
+
+Support
+
+Documents
+
+---
+
+## Vendor
+
+Needs:
+
+Purchase Orders
+
+Invoices
+
+Payments
+
+Contracts
+
+---
+
+## Partner
+
+Needs:
+
+Leads
+
+Opportunities
+
+Resources
+
+Commissions
+
+---
+
+# Navigation Architecture
+
+## Global Structure
+
+```text
+Tnvios
+│
+├── Home
+├── Workspace
+├── Modules
+├── AI
+├── Search
+├── Notifications
+└── Settings
+```
+
+---
+
+# Primary Navigation
+
+Left Sidebar
+
+Persistent
+
+Collapsible
+
+Contains:
+
+Dashboard
+
+Workspaces
+
+Installed Modules
+
+Reports
+
+Administration
+
+---
+
+# Secondary Navigation
+
+Context based
+
+Example:
+
+CRM
+
+Customers
+
+Leads
+
+Deals
+
+Activities
+
+Reports
+
+---
+
+# Top Navigation
+
+Contains:
+
+Global Search
+
+AI Assistant
+
+Notifications
+
+Profile
+
+Organization Switcher
+
+---
+
+# Dashboard Strategy
+
+Every user receives:
+
+Personal Dashboard
+
+Role Dashboard
+
+Organization Dashboard
+
+---
+
+## Dashboard Layout
+
+```text
+Header
+│
+├── Search
+├── AI
+└── Quick Actions
+
+KPI Cards
+│
+Analytics
+│
+Tasks
+│
+Notifications
+│
+Recent Activity
+```
+
+---
+
+# Homepage Experience
+
+After login:
+
+System identifies role.
+
+Example:
+
+CEO
+
+↓
+
+Executive Dashboard
+
+Employee
+
+↓
+
+Personal Workspace
+
+Customer
+
+↓
+
+Customer Portal
+
+---
+
+# Workspace Design
+
+Every user has a workspace.
+
+Examples:
+
+Employee Workspace
+
+Customer Workspace
+
+Vendor Workspace
+
+Partner Workspace
+
+Manager Workspace
+
+Executive Workspace
+
+---
+
+# Global Search
+
+Search available from every screen.
+
+Searches:
+
+Documents
+
+Customers
+
+Projects
+
+Employees
+
+Invoices
+
+Workflows
+
+Modules
+
+Results filtered by permissions.
+
+---
+
+# AI Experience
+
+AI accessible everywhere.
+
+---
+
+## AI Entry Points
+
+Top Navigation
+
+Floating Assistant
+
+Dashboard Widgets
+
+Context Menus
+
+Command Palette
+
+---
+
+## AI Workspace
+
+Dedicated AI workspace.
+
+Capabilities:
+
+Questions
+
+Reports
+
+Forecasts
+
+Automation
+
+Workflow creation
+
+Knowledge search
+
+---
+
+## AI Chat Examples
+
+Show overdue invoices
+
+Create approval workflow
+
+Find employee records
+
+Forecast next quarter revenue
+
+Generate report
+
+---
+
+# Design System
+
+## Style
+
+Modern Enterprise SaaS
+
+Characteristics:
+
+Clean
+
+Professional
+
+Minimal
+
+Data-focused
+
+---
+
+## Typography
+
+Readable
+
+Scalable
+
+Consistent hierarchy
+
+---
+
+## Layout
+
+8px spacing system
+
+Responsive grid
+
+Card-based design
+
+---
+
+## Components
+
+Buttons
+
+Tables
+
+Forms
+
+Charts
+
+Cards
+
+Dialogs
+
+Drawers
+
+Activity Feeds
+
+Command Palette
+
+---
+
+# Table Design
+
+Tnvios is data-heavy.
+
+Requirements:
+
+Column configuration
+
+Filters
+
+Saved views
+
+Bulk actions
+
+Export
+
+Infinite scrolling
+
+---
+
+# Form Design
+
+Requirements:
+
+Auto-save
+
+Validation
+
+Draft mode
+
+Approval support
+
+Version history
+
+---
+
+# Mobile Experience
+
+Mobile first for:
+
+Employees
+
+Customers
+
+Vendors
+
+Partners
+
+Desktop first for:
+
+Finance
+
+HR
+
+Analytics
+
+Administration
+
+---
+
+# Module UX Guidelines
+
+Every module must follow:
+
+Shared Design System
+
+Shared Navigation
+
+Shared Search
+
+Shared AI Integration
+
+Shared Notifications
+
+Shared Permissions
+
+Users should feel they are using one platform.
+
+Not separate applications.
+
+---
+
+# Customer Portal UX
+
+Focus:
+
+Simplicity
+
+Transparency
+
+Self-service
+
+Capabilities:
+
+Projects
+
+Orders
+
+Invoices
+
+Support
+
+Documents
+
+AI support
+
+---
+
+# Vendor Portal UX
+
+Focus:
+
+Efficiency
+
+Capabilities:
+
+Purchase Orders
+
+Invoices
+
+Payments
+
+Contracts
+
+Performance Metrics
+
+---
+
+# Partner Portal UX
+
+Focus:
+
+Growth
+
+Capabilities:
+
+Leads
+
+Commissions
+
+Resources
+
+Training
+
+---
+
+# Executive Experience
+
+The most important experience.
+
+Dashboard must answer:
+
+What happened?
+
+Why did it happen?
+
+What should I do next?
+
+AI should assist with all three.
+
+---
+
+# Accessibility
+
+WCAG AA Compliance
+
+Keyboard Navigation
+
+Screen Reader Support
+
+High Contrast Mode
+
+---
+
+# Dark Mode
+
+Required
+
+Consistent across platform
+
+---
+
+# Future UX Vision
+
+Tnvios evolves into:
+
+Operating System for Organizations
+
+Where users spend their entire workday.
+
+Features:
+
+Unified Search
+
+Unified Communication
+
+Unified AI
+
+Unified Data
+
+Unified Workflows
+
+Single Login
+
+Single Experience
+
+Across all modules and organizational layers.
+
+---
+
+# Enterprise UI Platform Addendum
+
+Tnvios UI is a governed enterprise design system, not raw Tailwind usage.
+
+Frontend UI standard:
+
+* Tailwind CSS as utility styling layer
+* shadcn/ui as base component source
+* Radix UI primitives where applicable
+* Tnvios UI Kit exported from @tnvios/ui
+* Tnvios Platform Form Engine using controlled components
+* Zod validation
+* Tiptap rich text editor
+
+Modules must import UI components only from @tnvios/ui.
+
+Raw Tailwind is allowed inside the UI Kit. Raw Tailwind in business modules is restricted and reviewed.
+
+Required enterprise UX capabilities:
+
+* Organization onboarding flow
+* Role-based onboarding checklists
+* Module setup flows
+* In-app help and contextual guidance
+* Guided tours
+* Empty-state guidance
+* Activity feed and entity timelines
+* Comments and @mentions
+* Rich text editing
+* Email-to-action flows
+* Import/export flows for every module
+
+These capabilities must be shared platform services. Modules may not implement separate onboarding, comments, activity feed, import/export, or contextual help systems.

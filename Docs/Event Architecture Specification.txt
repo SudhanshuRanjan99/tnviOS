@@ -1,0 +1,960 @@
+# Tnvios Event Architecture Specification
+
+Version: 1.0
+
+Status: Core Platform Specification
+
+Classification: Platform Integration Layer
+
+Priority: Critical
+
+---
+
+# Executive Summary
+
+The Event Architecture provides the communication backbone for Tnvios.
+
+It enables:
+
+* Loose coupling
+* Module independence
+* Workflow automation
+* AI integration
+* Analytics collection
+* Notification delivery
+* External integrations
+* Scalability
+
+Modules never communicate directly.
+
+All business communication occurs through events.
+
+---
+
+# Purpose
+
+The Event Engine manages:
+
+* Event Publishing
+* Event Delivery
+* Event Routing
+* Event Processing
+* Event Storage
+* Event Replay
+* Event Auditing
+* Event Analytics
+
+---
+
+# Design Principles
+
+## Event First
+
+Business actions produce events.
+
+Events become the source of truth.
+
+---
+
+## Loose Coupling
+
+Modules must not depend on each other.
+
+Bad:
+
+```text id="o9fxv5"
+CRM
+ ↓
+Finance
+```
+
+Good:
+
+```text id="9nqhnj"
+CRM
+ ↓
+Event Bus
+ ↓
+Finance
+```
+
+---
+
+## Immutable Events
+
+Events are never modified.
+
+Events represent facts.
+
+---
+
+## Auditable
+
+Every event is recorded.
+
+---
+
+## Replayable
+
+Events can be replayed.
+
+---
+
+## Tenant Aware
+
+All events contain tenant context.
+
+---
+
+# Event Architecture Overview
+
+```text id="b9kz4v"
+Module
+  │
+  ▼
+Event Publisher
+  │
+  ▼
+Event Bus
+  │
+  ▼
+Event Router
+  │
+  ▼
+Subscribers
+```
+
+---
+
+# Event Lifecycle
+
+```text id="hrb6rr"
+Business Action
+ ↓
+Event Created
+ ↓
+Published
+ ↓
+Stored
+ ↓
+Delivered
+ ↓
+Processed
+ ↓
+Audited
+```
+
+---
+
+# Event Flow Example
+
+Customer Creation
+
+```text id="l91jlwm"
+CRM
+
+Customer Created
+
+↓
+
+customer.created
+
+↓
+
+Event Bus
+
+↓
+
+Finance
+
+↓
+
+Analytics
+
+↓
+
+Notifications
+
+↓
+
+AI Engine
+```
+
+No module directly calls another module.
+
+---
+
+# Event Categories
+
+## Domain Events
+
+Business facts.
+
+Examples:
+
+customer.created
+
+invoice.paid
+
+employee.hired
+
+project.completed
+
+---
+
+## System Events
+
+Platform events.
+
+Examples:
+
+user.logged_in
+
+permission.changed
+
+module.installed
+
+workflow.started
+
+---
+
+## Integration Events
+
+External communication.
+
+Examples:
+
+webhook.sent
+
+bank.payment.received
+
+erp.sync.completed
+
+---
+
+## AI Events
+
+AI activity.
+
+Examples:
+
+ai.agent.executed
+
+ai.report.generated
+
+ai.forecast.completed
+
+---
+
+# Event Naming Standard
+
+Format:
+
+```text id="5fx73f"
+domain.entity.action
+```
+
+Examples:
+
+crm.customer.created
+
+finance.invoice.paid
+
+hr.employee.hired
+
+workflow.approval.completed
+
+---
+
+# Event Structure
+
+Every event follows a standard schema.
+
+```json id="tdq44m"
+{
+  "eventId": "uuid",
+  "eventType": "crm.customer.created",
+  "eventVersion": 1,
+  "timestamp": "2026-01-01T00:00:00Z",
+
+  "tenantId": "uuid",
+  "organizationId": "uuid",
+
+  "userId": "uuid",
+
+  "correlationId": "uuid",
+  "causationId": "uuid",
+
+  "source": "crm",
+
+  "data": {}
+}
+```
+
+---
+
+# Required Event Fields
+
+eventId
+
+eventType
+
+eventVersion
+
+timestamp
+
+tenantId
+
+organizationId
+
+source
+
+data
+
+---
+
+# Correlation IDs
+
+Used for tracing.
+
+Example:
+
+```text id="5hxdph"
+Customer Created
+ ↓
+Workflow Started
+ ↓
+Notification Sent
+```
+
+All linked through same correlationId.
+
+---
+
+# Causation IDs
+
+Identify parent event.
+
+Example:
+
+```text id="1sivhn"
+customer.created
+
+caused
+
+customer.welcome_email.sent
+```
+
+---
+
+# Event Bus
+
+Purpose:
+
+Transport events.
+
+---
+
+# Phase 1
+
+Technology:
+
+Redis Streams
+
+Benefits:
+
+Simple
+
+Fast
+
+Operationally easy
+
+---
+
+# Phase 2
+
+Technology:
+
+Kafka
+
+Benefits:
+
+Large Scale
+
+Replay
+
+Partitioning
+
+Streaming Analytics
+
+---
+
+# Event Routing
+
+The Event Router determines subscribers.
+
+Example:
+
+```text id="mzgv8i"
+invoice.paid
+
+↓
+
+Finance Analytics
+
+↓
+
+Notifications
+
+↓
+
+Customer Portal
+
+↓
+
+AI Engine
+```
+
+---
+
+# Publisher Model
+
+Modules publish events.
+
+Example:
+
+```typescript id="or3xrl"
+eventBus.publish(
+  "crm.customer.created",
+  payload
+);
+```
+
+---
+
+# Subscriber Model
+
+Modules subscribe to events.
+
+Example:
+
+```typescript id="36e4ks"
+subscribe(
+  "crm.customer.created",
+  handler
+);
+```
+
+---
+
+# Event Delivery Guarantees
+
+Minimum:
+
+At Least Once Delivery
+
+---
+
+Consumers must be idempotent.
+
+---
+
+# Idempotency
+
+Consumers must safely process duplicate events.
+
+Example:
+
+```text id="rj0mmf"
+invoice.paid
+```
+
+must not create duplicate payments.
+
+---
+
+# Dead Letter Queue
+
+Failed events moved to:
+
+DLQ
+
+Stores:
+
+Event
+
+Error
+
+Timestamp
+
+Retry Count
+
+---
+
+# Retry Policy
+
+Default:
+
+3 Retries
+
+Exponential Backoff
+
+---
+
+# Event Storage
+
+All events persisted.
+
+Reasons:
+
+Audit
+
+Analytics
+
+Replay
+
+Compliance
+
+---
+
+# Event Replay
+
+Supports:
+
+Replay by Event
+
+Replay by Date
+
+Replay by Tenant
+
+Replay by Module
+
+---
+
+Example:
+
+```text id="g2vt9y"
+Replay
+
+invoice.paid
+
+for
+
+last 30 days
+```
+
+---
+
+# Event Versioning
+
+Events evolve safely.
+
+Example:
+
+```text id="vhhq7g"
+customer.created.v1
+
+customer.created.v2
+```
+
+Consumers support compatible versions.
+
+---
+
+# Event Security
+
+Events inherit:
+
+Tenant Context
+
+Permission Context
+
+Security Context
+
+---
+
+# Event Isolation
+
+Tenant A events never visible to Tenant B.
+
+---
+
+# Event Auditing
+
+Every event logged.
+
+Track:
+
+Publisher
+
+Subscriber
+
+Processing Result
+
+Timestamp
+
+Latency
+
+---
+
+# Workflow Integration
+
+Workflow Engine both publishes and consumes events.
+
+Examples:
+
+workflow.started
+
+workflow.approved
+
+workflow.rejected
+
+workflow.completed
+
+---
+
+# Notification Integration
+
+Notification Engine consumes events.
+
+Example:
+
+```text id="v7dyh3"
+invoice.approved
+
+↓
+
+Email Notification
+```
+
+---
+
+# Analytics Integration
+
+Analytics Engine consumes all business events.
+
+Examples:
+
+Sales Metrics
+
+HR Metrics
+
+Finance Metrics
+
+Workflow Metrics
+
+---
+
+# AI Integration
+
+AI Engine subscribes to events.
+
+Examples:
+
+customer.created
+
+invoice.paid
+
+employee.hired
+
+project.completed
+
+---
+
+AI can react through workflows.
+
+---
+
+# Integration Engine
+
+External systems connect through events.
+
+Examples:
+
+ERP
+
+Banks
+
+Government APIs
+
+CRM Systems
+
+Payment Gateways
+
+---
+
+# Event Filtering
+
+Subscribers may filter:
+
+Tenant
+
+Organization
+
+Module
+
+Event Type
+
+Data Attributes
+
+---
+
+# Event Registry
+
+Central catalog.
+
+Stores:
+
+Event Name
+
+Version
+
+Publisher
+
+Consumers
+
+Schema
+
+Documentation
+
+---
+
+# Event Schema Registry
+
+Every event schema registered.
+
+Benefits:
+
+Validation
+
+Compatibility
+
+Documentation
+
+---
+
+# Core Event Catalog
+
+Examples:
+
+---
+
+Identity
+
+user.created
+
+user.updated
+
+user.logged_in
+
+user.logged_out
+
+---
+
+Organization
+
+organization.created
+
+business_unit.created
+
+department.created
+
+---
+
+CRM
+
+customer.created
+
+customer.updated
+
+lead.created
+
+opportunity.closed
+
+---
+
+Finance
+
+invoice.created
+
+invoice.approved
+
+invoice.paid
+
+payment.received
+
+---
+
+HR
+
+employee.hired
+
+employee.promoted
+
+employee.terminated
+
+---
+
+Workflow
+
+workflow.started
+
+workflow.completed
+
+workflow.failed
+
+---
+
+AI
+
+ai.agent.executed
+
+ai.forecast.generated
+
+---
+
+# Event Database Entities
+
+events
+
+event_subscriptions
+
+event_failures
+
+event_retries
+
+event_registry
+
+event_schema_versions
+
+event_audit_logs
+
+---
+
+# Performance Requirements
+
+Publish:
+
+< 50ms
+
+Delivery:
+
+< 100ms
+
+Processing:
+
+< 500ms
+
+---
+
+# Governance Rules
+
+Modules may:
+
+Publish Events
+
+Subscribe Events
+
+Register Events
+
+---
+
+Modules may not:
+
+Directly invoke other modules
+
+Modify published events
+
+Access another tenant through events
+
+Bypass event auditing
+
+---
+
+# Future Architecture
+
+Phase 1
+
+Redis Streams
+
+---
+
+Phase 2
+
+Kafka
+
+---
+
+Phase 3
+
+Event Sourcing
+
+CQRS
+
+Real-Time Analytics
+
+AI Event Processing
+
+Global Event Marketplace
+
+---
+
+# Golden Rule
+
+Every meaningful business action in Tnvios must generate an event.
+
+Instead of:
+
+```text id="6fdwmz"
+CRM
+ ↓
+Finance
+```
+
+Tnvios operates as:
+
+```text id="wvrmye"
+CRM
+ ↓
+customer.created
+ ↓
+Event Bus
+ ↓
+Finance
+ ↓
+Analytics
+ ↓
+Notifications
+ ↓
+AI
+```
+
+creating a scalable, modular, enterprise-grade platform where modules remain independent while the entire ecosystem stays synchronized.
+
+---
+
+# Enterprise Shared Service Events
+
+Tnvios shared services publish and consume events.
+
+Examples:
+
+```text
+onboarding.flow.started
+onboarding.step.completed
+help.tour.started
+help.tour.completed
+activity.entry.created
+comment.created
+comment.mention.created
+inbound_email.received
+inbound_email.action.executed
+import.started
+import.completed
+import.failed
+export.started
+export.completed
+export.failed
+```
+
+These events must include tenant, organization, user, correlation ID, causation ID, source, event version, and payload data.

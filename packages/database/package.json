@@ -1,0 +1,72 @@
+{
+  "name": "@tnvios/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "default": "./dist/constants.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts.d.ts",
+      "default": "./dist/contracts.js"
+    },
+    "./identifiers": {
+      "types": "./dist/identifiers.d.ts",
+      "default": "./dist/identifiers.js"
+    },
+    "./mikro-orm": {
+      "types": "./dist/mikro-orm.d.ts",
+      "default": "./dist/mikro-orm.js"
+    },
+    "./migrations": {
+      "types": "./dist/migrations.d.ts",
+      "default": "./dist/migrations.js"
+    },
+    "./raw-sql": {
+      "types": "./dist/raw-sql.d.ts",
+      "default": "./dist/raw-sql.js"
+    },
+    "./testing": {
+      "types": "./dist/test-database.d.ts",
+      "default": "./dist/test-database.js"
+    },
+    "./transactions": {
+      "types": "./dist/transaction-manager.d.ts",
+      "default": "./dist/transaction-manager.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint src",
+    "migration": "node dist/migration-cli.js",
+    "migration:status": "pnpm build && pnpm migration status",
+    "migration:up": "pnpm build && pnpm migration up",
+    "test": "vitest run",
+    "test:integration": "vitest run src/test-database.integration.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mikro-orm/core": "7.1.4",
+    "@mikro-orm/migrations": "7.1.4",
+    "@mikro-orm/postgresql": "7.1.4",
+    "@tnvios/config": "workspace:*",
+    "uuid": "14.0.0"
+  },
+  "devDependencies": {
+    "@tnvios/eslint-config": "workspace:*",
+    "@tnvios/typescript-config": "workspace:*",
+    "@types/node": "25.9.2",
+    "eslint": "10.4.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

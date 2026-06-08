@@ -1,0 +1,22 @@
+# ADR-004: Enterprise Shared Services Architecture
+
+Status: Accepted
+
+Tnvios is defined as a full enterprise platform. The following shared services are required core platform capabilities:
+
+* Onboarding Engine
+* Help & Guidance Engine
+* Activity Feed Engine
+* Comments & Mentions Engine
+* Inbound Email / Email-to-Action Engine
+* Import / Export Engine
+
+These services are shared engines. Modules may register configuration, templates, action handlers, entity mappings, and UI extensions, but modules may not implement separate versions of these systems.
+
+Required rule:
+
+Every module must consume the shared platform engines for onboarding, contextual help, activity timelines, comments, mentions, inbound email actions, imports, and exports.
+
+Reason:
+
+Tnvios must provide consistent enterprise behavior across all modules, including tenant isolation, organization isolation, permissions, field-level security, audit logging, workflows, notifications, and event publishing.

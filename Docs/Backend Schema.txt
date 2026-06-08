@@ -1,0 +1,1008 @@
+# Tnvios Backend Schema Specification
+
+Version: 1.0
+
+Status: Core Platform Database Architecture
+
+Database: PostgreSQL
+
+Architecture: Multi-Tenant Modular Platform
+
+---
+
+# Core Design Principles
+
+Every record must belong to:
+
+Tenant
+
+Organization
+
+Business Unit
+
+Department
+
+User
+
+All modules inherit these relationships.
+
+---
+
+# Global Base Model
+
+Every table inherits:
+
+```sql
+id UUID PRIMARY KEY
+
+tenant_id UUID NOT NULL
+
+organization_id UUID
+
+created_at TIMESTAMPTZ
+
+updated_at TIMESTAMPTZ
+
+deleted_at TIMESTAMPTZ
+
+created_by UUID
+
+updated_by UUID
+```
+
+---
+
+# Layer 1: Identity Engine
+
+## users
+
+```sql
+users
+
+id
+email
+username
+password_hash
+status
+last_login_at
+
+created_at
+updated_at
+```
+
+---
+
+## sessions
+
+```sql
+sessions
+
+id
+user_id
+access_token
+refresh_token
+expires_at
+ip_address
+user_agent
+```
+
+---
+
+## user_profiles
+
+```sql
+user_profiles
+
+id
+user_id
+
+first_name
+last_name
+
+phone
+avatar
+
+timezone
+language
+
+preferences JSONB
+```
+
+---
+
+# Layer 2: Organization Engine
+
+## tenants
+
+Top-level tenant.
+
+```sql
+tenants
+
+id
+name
+slug
+status
+subscription_plan
+```
+
+---
+
+## organizations
+
+```sql
+organizations
+
+id
+tenant_id
+
+name
+legal_name
+
+industry
+
+website
+
+country
+
+currency
+```
+
+---
+
+## business_units
+
+```sql
+business_units
+
+id
+organization_id
+
+name
+code
+
+description
+
+parent_unit_id
+```
+
+---
+
+## departments
+
+```sql
+departments
+
+id
+
+business_unit_id
+
+name
+
+description
+```
+
+---
+
+## teams
+
+```sql
+teams
+
+id
+
+department_id
+
+name
+
+manager_id
+```
+
+---
+
+# Layer 3: Membership System
+
+## memberships
+
+Connects users to organizations.
+
+```sql
+memberships
+
+id
+
+user_id
+
+organization_id
+
+business_unit_id
+
+department_id
+
+team_id
+
+status
+```
+
+---
+
+# Layer 4: Permission Engine
+
+## roles
+
+```sql
+roles
+
+id
+
+organization_id
+
+name
+
+description
+```
+
+---
+
+## permissions
+
+```sql
+permissions
+
+id
+
+code
+
+name
+
+description
+```
+
+Examples:
+
+crm.read
+
+finance.approve
+
+employee.salary.view
+
+---
+
+## role_permissions
+
+```sql
+role_permissions
+
+role_id
+
+permission_id
+```
+
+---
+
+## user_roles
+
+```sql
+user_roles
+
+user_id
+
+role_id
+```
+
+---
+
+# Layer 5: Employee Layer
+
+## employees
+
+```sql
+employees
+
+id
+
+membership_id
+
+employee_code
+
+designation
+
+manager_id
+
+joining_date
+
+employment_type
+
+salary_grade
+```
+
+---
+
+## employee_documents
+
+```sql
+employee_documents
+
+id
+
+employee_id
+
+file_id
+
+document_type
+```
+
+---
+
+# Layer 6: Customer Layer
+
+## customers
+
+```sql
+customers
+
+id
+
+organization_id
+
+customer_code
+
+type
+
+name
+
+email
+
+phone
+
+status
+```
+
+---
+
+## customer_contacts
+
+```sql
+customer_contacts
+
+id
+
+customer_id
+
+name
+
+email
+
+phone
+
+designation
+```
+
+---
+
+# Layer 7: Vendor Layer
+
+## vendors
+
+```sql
+vendors
+
+id
+
+organization_id
+
+vendor_code
+
+name
+
+email
+
+phone
+
+status
+```
+
+---
+
+## vendor_contacts
+
+```sql
+vendor_contacts
+
+id
+
+vendor_id
+
+name
+
+email
+
+phone
+```
+
+---
+
+# Layer 8: Partner Layer
+
+## partners
+
+```sql
+partners
+
+id
+
+organization_id
+
+partner_type
+
+name
+
+status
+```
+
+Examples:
+
+Reseller
+
+Distributor
+
+Agency
+
+Consultant
+
+---
+
+# Layer 9: Module Engine
+
+## modules
+
+```sql
+modules
+
+id
+
+name
+
+slug
+
+version
+
+status
+```
+
+---
+
+## installed_modules
+
+```sql
+installed_modules
+
+id
+
+organization_id
+
+module_id
+
+installed_at
+
+enabled
+```
+
+---
+
+## module_permissions
+
+```sql
+module_permissions
+
+module_id
+
+permission_id
+```
+
+---
+
+# Layer 10: Workflow Engine
+
+## workflows
+
+```sql
+workflows
+
+id
+
+organization_id
+
+name
+
+description
+
+module
+```
+
+---
+
+## workflow_steps
+
+```sql
+workflow_steps
+
+id
+
+workflow_id
+
+step_order
+
+step_name
+
+approver_role
+```
+
+---
+
+## workflow_instances
+
+```sql
+workflow_instances
+
+id
+
+workflow_id
+
+entity_type
+
+entity_id
+
+status
+```
+
+---
+
+# Layer 11: Notification Engine
+
+## notifications
+
+```sql
+notifications
+
+id
+
+user_id
+
+title
+
+message
+
+channel
+
+status
+
+read_at
+```
+
+---
+
+# Layer 12: File Engine
+
+## files
+
+```sql
+files
+
+id
+
+organization_id
+
+storage_key
+
+file_name
+
+mime_type
+
+file_size
+```
+
+---
+
+## file_permissions
+
+```sql
+file_permissions
+
+id
+
+file_id
+
+entity_type
+
+entity_id
+```
+
+---
+
+# Layer 13: Audit Engine
+
+## audit_logs
+
+```sql
+audit_logs
+
+id
+
+user_id
+
+entity_type
+
+entity_id
+
+action
+
+old_values JSONB
+
+new_values JSONB
+
+ip_address
+
+created_at
+```
+
+Partition monthly.
+
+---
+
+# Layer 14: Search Engine
+
+## search_index
+
+```sql
+search_index
+
+id
+
+entity_type
+
+entity_id
+
+search_vector
+```
+
+Search index synchronizes to Typesense for user-facing fast search. pgvector is used for semantic retrieval and AI memory.
+
+---
+
+# Layer 15: Event Engine
+
+## events
+
+```sql
+events
+
+id
+
+event_name
+
+aggregate_type
+
+aggregate_id
+
+payload JSONB
+
+occurred_at
+```
+
+Examples:
+
+CustomerCreated
+
+InvoicePaid
+
+EmployeeJoined
+
+---
+
+# Layer 16: Analytics Engine
+
+## metrics
+
+```sql
+metrics
+
+id
+
+organization_id
+
+metric_name
+
+metric_value
+
+recorded_at
+```
+
+---
+
+## dashboards
+
+```sql
+dashboards
+
+id
+
+organization_id
+
+name
+
+layout JSONB
+```
+
+---
+
+# Layer 17: AI Engine
+
+## ai_agents
+
+```sql
+ai_agents
+
+id
+
+organization_id
+
+name
+
+agent_type
+
+status
+```
+
+Examples:
+
+AI CFO
+
+AI HR
+
+AI Sales
+
+AI Operations
+
+---
+
+## ai_conversations
+
+```sql
+ai_conversations
+
+id
+
+agent_id
+
+user_id
+
+title
+```
+
+---
+
+## ai_messages
+
+```sql
+ai_messages
+
+id
+
+conversation_id
+
+role
+
+content
+
+tokens
+```
+
+---
+
+# CRM Module Example
+
+## crm_leads
+
+```sql
+crm_leads
+
+id
+
+customer_id
+
+source
+
+status
+
+value
+
+assigned_to
+```
+
+---
+
+## crm_opportunities
+
+```sql
+crm_opportunities
+
+id
+
+lead_id
+
+stage
+
+amount
+
+probability
+```
+
+---
+
+# Finance Module Example
+
+## invoices
+
+```sql
+invoices
+
+id
+
+customer_id
+
+invoice_number
+
+status
+
+total_amount
+
+due_date
+```
+
+---
+
+## payments
+
+```sql
+payments
+
+id
+
+invoice_id
+
+amount
+
+payment_date
+```
+
+---
+
+# Project Module Example
+
+## projects
+
+```sql
+projects
+
+id
+
+customer_id
+
+name
+
+status
+
+start_date
+
+end_date
+```
+
+---
+
+## tasks
+
+```sql
+tasks
+
+id
+
+project_id
+
+assigned_to
+
+status
+
+priority
+```
+
+---
+
+# Hierarchy Model
+
+```text
+Tenant
+│
+└── Organization
+     │
+     └── Business Unit
+           │
+           └── Department
+                 │
+                 └── Team
+                       │
+                       └── User
+                              │
+                              ├── Employee
+                              ├── Customer
+                              ├── Vendor
+                              └── Partner
+```
+
+All modules inherit this hierarchy.
+
+This becomes the single source of truth across the entire platform.
+
+---
+
+# Enterprise Shared Services Schema Addendum
+
+## Onboarding Engine
+
+```sql
+onboarding_flows
+onboarding_steps
+onboarding_progress
+onboarding_checklists
+```
+
+## Help & Guidance Engine
+
+```sql
+help_articles
+help_contexts
+help_tours
+help_tour_steps
+user_help_progress
+```
+
+## Activity Feed Engine
+
+```sql
+activity_events
+activity_references
+activity_visibility
+```
+
+## Comments & Mentions Engine
+
+```sql
+comment_threads
+comments
+comment_mentions
+comment_reactions
+comment_attachments
+```
+
+## Inbound Email Engine
+
+```sql
+inbound_email_messages
+inbound_email_threads
+inbound_email_actions
+inbound_email_attachments
+inbound_email_failures
+```
+
+## Import / Export Engine
+
+```sql
+import_jobs
+import_job_rows
+import_templates
+export_jobs
+export_templates
+bulk_operation_logs
+```
+
+All shared service tables must include tenant context where applicable, audit fields, soft delete fields where appropriate, and permission-aware access rules.

@@ -1,0 +1,27 @@
+{
+  "name": "@tnvios/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "*.js"
+  ],
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "exports": {
+    "./base": "./base.js",
+    "./nest": "./nest.js",
+    "./nextjs": "./nextjs.js"
+  },
+  "dependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.6.0",
+    "typescript-eslint": "8.60.1"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0",
+    "typescript": ">=5.9.0"
+  }
+}

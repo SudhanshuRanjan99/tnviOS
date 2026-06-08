@@ -1,0 +1,1138 @@
+# Tnvios Entity Relationship Document (ERD)
+
+Version: 1.0
+
+Status: Core Platform Data Model
+
+Classification: Master Data Architecture
+
+Priority: Critical
+
+---
+
+# Purpose
+
+This document defines the core entities, relationships, ownership rules, and inheritance structure of Tnvios.
+
+The ERD acts as the foundation for:
+
+* Core Platform
+* Core Engines
+* Modules
+* AI Layer
+* Workflows
+* Security
+* Analytics
+
+---
+
+# Core Entity Hierarchy
+
+```text
+Tenant
+ │
+ └── Organization
+      │
+      ├── Business Unit
+      │     │
+      │     └── Department
+      │            │
+      │            └── Team
+      │                   │
+      │                   └── Membership
+      │                          │
+      │                          └── User
+      │
+      ├── Customer
+      ├── Vendor
+      ├── Partner
+      ├── Module
+      ├── Workflow
+      └── AI Agent
+```
+
+---
+
+# Global Base Entity
+
+Every business entity inherits:
+
+```sql
+id UUIDV7 PK
+
+tenant_id UUID FK
+
+organization_id UUID FK
+
+created_at TIMESTAMPTZ
+
+updated_at TIMESTAMPTZ
+
+deleted_at TIMESTAMPTZ
+
+created_by UUID FK
+
+updated_by UUID FK
+```
+
+---
+
+# SECTION A
+
+# ORGANIZATION ENGINE
+
+---
+
+## tenants
+
+Represents platform customers.
+
+```text
+Tenant
+ └── Organizations
+```
+
+Fields:
+
+id
+
+name
+
+slug
+
+subscription_plan
+
+status
+
+---
+
+Relationship:
+
+```text
+Tenant
+ 1
+ │
+ N
+Organization
+```
+
+---
+
+## organizations
+
+Legal entities.
+
+Fields:
+
+id
+
+tenant_id
+
+name
+
+legal_name
+
+country
+
+currency
+
+status
+
+---
+
+Relationship:
+
+```text
+Organization
+ 1
+ │
+ N
+Business Unit
+```
+
+---
+
+## business_units
+
+Operational divisions.
+
+Fields:
+
+id
+
+organization_id
+
+parent_unit_id
+
+name
+
+code
+
+status
+
+---
+
+Relationship:
+
+```text
+Business Unit
+ 1
+ │
+ N
+Department
+```
+
+---
+
+## departments
+
+Functional areas.
+
+Fields:
+
+id
+
+business_unit_id
+
+name
+
+code
+
+head_user_id
+
+---
+
+Relationship:
+
+```text
+Department
+ 1
+ │
+ N
+Team
+```
+
+---
+
+## teams
+
+Working groups.
+
+Fields:
+
+id
+
+department_id
+
+team_lead_id
+
+name
+
+---
+
+Relationship:
+
+```text
+Team
+ 1
+ │
+ N
+Membership
+```
+
+---
+
+# SECTION B
+
+# IDENTITY ENGINE
+
+---
+
+## users
+
+Platform users.
+
+Fields:
+
+id
+
+email
+
+username
+
+password_hash
+
+status
+
+last_login_at
+
+---
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ N
+Membership
+```
+
+---
+
+## user_profiles
+
+User details.
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ 1
+Profile
+```
+
+---
+
+## sessions
+
+User sessions.
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ N
+Sessions
+```
+
+---
+
+# SECTION C
+
+# MEMBERSHIP ENGINE
+
+---
+
+## memberships
+
+Connects users to organization hierarchy.
+
+Fields:
+
+id
+
+user_id
+
+organization_id
+
+business_unit_id
+
+department_id
+
+team_id
+
+role_scope
+
+status
+
+---
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ N
+Memberships
+
+Membership
+ N
+ │
+ 1
+Team
+```
+
+---
+
+# SECTION D
+
+# PERMISSION ENGINE
+
+---
+
+## roles
+
+Fields:
+
+id
+
+organization_id
+
+name
+
+description
+
+---
+
+## permissions
+
+Fields:
+
+id
+
+code
+
+name
+
+description
+
+---
+
+## role_permissions
+
+Relationship:
+
+```text
+Role
+ N
+ │
+ N
+Permission
+```
+
+---
+
+## user_roles
+
+Relationship:
+
+```text
+User
+ N
+ │
+ N
+Role
+```
+
+---
+
+## policies
+
+Business rules.
+
+Relationship:
+
+```text
+Organization
+ 1
+ │
+ N
+Policies
+```
+
+---
+
+# SECTION E
+
+# EMPLOYEE LAYER
+
+---
+
+## employees
+
+Fields:
+
+id
+
+membership_id
+
+employee_code
+
+designation
+
+manager_id
+
+joining_date
+
+employment_type
+
+---
+
+Relationship:
+
+```text
+Membership
+ 1
+ │
+ 1
+Employee
+```
+
+---
+
+## employee_documents
+
+Relationship:
+
+```text
+Employee
+ 1
+ │
+ N
+Documents
+```
+
+---
+
+# SECTION F
+
+# CUSTOMER LAYER
+
+---
+
+## customers
+
+Fields:
+
+id
+
+organization_id
+
+customer_code
+
+name
+
+type
+
+status
+
+---
+
+Relationship:
+
+```text
+Customer
+ 1
+ │
+ N
+Customer Contacts
+```
+
+---
+
+## customer_contacts
+
+Fields:
+
+id
+
+customer_id
+
+name
+
+email
+
+phone
+
+---
+
+# SECTION G
+
+# VENDOR LAYER
+
+---
+
+## vendors
+
+Fields:
+
+id
+
+organization_id
+
+vendor_code
+
+name
+
+status
+
+---
+
+Relationship:
+
+```text
+Vendor
+ 1
+ │
+ N
+Vendor Contacts
+```
+
+---
+
+## vendor_contacts
+
+Fields:
+
+id
+
+vendor_id
+
+name
+
+email
+
+phone
+
+---
+
+# SECTION H
+
+# PARTNER LAYER
+
+---
+
+## partners
+
+Fields:
+
+id
+
+organization_id
+
+partner_type
+
+name
+
+status
+
+---
+
+Relationship:
+
+```text
+Partner
+ 1
+ │
+ N
+Partner Contacts
+```
+
+---
+
+## partner_contacts
+
+Fields:
+
+id
+
+partner_id
+
+name
+
+email
+
+phone
+
+---
+
+# SECTION I
+
+# MODULE ENGINE
+
+---
+
+## modules
+
+Master registry.
+
+Fields:
+
+id
+
+name
+
+slug
+
+version
+
+---
+
+Relationship:
+
+```text
+Module
+ 1
+ │
+ N
+Installed Modules
+```
+
+---
+
+## installed_modules
+
+Fields:
+
+id
+
+organization_id
+
+module_id
+
+enabled
+
+installed_at
+
+---
+
+# SECTION J
+
+# WORKFLOW ENGINE
+
+---
+
+## workflows
+
+Workflow definitions.
+
+Fields:
+
+id
+
+organization_id
+
+name
+
+version
+
+status
+
+---
+
+Relationship:
+
+```text
+Workflow
+ 1
+ │
+ N
+Workflow Steps
+```
+
+---
+
+## workflow_steps
+
+Fields:
+
+id
+
+workflow_id
+
+step_order
+
+step_type
+
+---
+
+Relationship:
+
+```text
+Workflow
+ 1
+ │
+ N
+Workflow Instances
+```
+
+---
+
+## workflow_instances
+
+Running workflows.
+
+Fields:
+
+id
+
+workflow_id
+
+status
+
+started_at
+
+completed_at
+
+---
+
+# SECTION K
+
+# EVENT ENGINE
+
+---
+
+## events
+
+Fields:
+
+id
+
+event_type
+
+tenant_id
+
+organization_id
+
+payload
+
+occurred_at
+
+---
+
+Relationship:
+
+```text
+Organization
+ 1
+ │
+ N
+Events
+```
+
+---
+
+# SECTION L
+
+# AUDIT ENGINE
+
+---
+
+## audit_logs
+
+Fields:
+
+id
+
+user_id
+
+entity_type
+
+entity_id
+
+action
+
+old_values
+
+new_values
+
+created_at
+
+---
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ N
+Audit Logs
+```
+
+---
+
+# SECTION M
+
+# FILE ENGINE
+
+---
+
+## files
+
+Fields:
+
+id
+
+organization_id
+
+storage_key
+
+file_name
+
+mime_type
+
+size
+
+---
+
+## file_permissions
+
+Relationship:
+
+```text
+File
+ N
+ │
+ N
+Entities
+```
+
+---
+
+# SECTION N
+
+# NOTIFICATION ENGINE
+
+---
+
+## notifications
+
+Fields:
+
+id
+
+user_id
+
+title
+
+message
+
+channel
+
+status
+
+read_at
+
+---
+
+Relationship:
+
+```text
+User
+ 1
+ │
+ N
+Notifications
+```
+
+---
+
+# SECTION O
+
+# ANALYTICS ENGINE
+
+---
+
+## metrics
+
+Fields:
+
+id
+
+organization_id
+
+metric_name
+
+metric_value
+
+recorded_at
+
+---
+
+## dashboards
+
+Fields:
+
+id
+
+organization_id
+
+name
+
+layout_json
+
+---
+
+# SECTION P
+
+# AI ENGINE
+
+---
+
+## ai_agents
+
+Fields:
+
+id
+
+organization_id
+
+agent_type
+
+name
+
+status
+
+---
+
+Relationship:
+
+```text
+Organization
+ 1
+ │
+ N
+AI Agents
+```
+
+---
+
+## ai_conversations
+
+Fields:
+
+id
+
+agent_id
+
+user_id
+
+title
+
+---
+
+Relationship:
+
+```text
+AI Agent
+ 1
+ │
+ N
+Conversations
+```
+
+---
+
+## ai_messages
+
+Fields:
+
+id
+
+conversation_id
+
+role
+
+content
+
+tokens
+
+---
+
+Relationship:
+
+```text
+Conversation
+ 1
+ │
+ N
+Messages
+```
+
+---
+
+# Master Relationship Diagram
+
+```text
+Tenant
+ │
+ └── Organization
+      │
+      ├── Business Unit
+      │     └── Department
+      │            └── Team
+      │                   └── Membership
+      │                          └── User
+      │                                 └── Employee
+      │
+      ├── Customers
+      ├── Vendors
+      ├── Partners
+      │
+      ├── Roles
+      ├── Permissions
+      ├── Policies
+      │
+      ├── Workflows
+      ├── Events
+      ├── Audit Logs
+      ├── Files
+      ├── Notifications
+      ├── Metrics
+      ├── Dashboards
+      ├── AI Agents
+      │
+      └── Installed Modules
+```
+
+---
+
+# Future Module Extension Strategy
+
+Core Platform Owns:
+
+* Organization
+* Identity
+* Permissions
+* Workflows
+* Events
+* Audit
+* Files
+* AI
+
+Modules Extend Core:
+
+CRM
+└── crm_customers
+└── crm_leads
+
+Finance
+└── finance_invoices
+└── finance_payments
+
+HR
+└── hr_leave_requests
+└── hr_payroll
+
+Manufacturing
+└── manufacturing_orders
+└── manufacturing_assets
+
+Every module inherits:
+
+tenant_id
+
+organization_id
+
+created_by
+
+updated_by
+
+and integrates with:
+
+Permission Engine
+
+Workflow Engine
+
+Event Engine
+
+Audit Engine
+
+AI Engine

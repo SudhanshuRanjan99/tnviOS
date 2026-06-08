@@ -1,0 +1,982 @@
+# Tnvios Permission & Policy Engine Specification
+
+Version: 1.0
+
+Status: Core Platform Specification
+
+Classification: Security & Governance Engine
+
+Priority: Critical
+
+---
+
+# Executive Summary
+
+The Permission & Policy Engine is the central authorization system of Tnvios.
+
+It determines:
+
+* Who can access what
+* Which data can be viewed
+* Which actions can be performed
+* Which workflows require approval
+* Which AI actions are allowed
+* Which organizational boundaries apply
+
+All access decisions in Tnvios must pass through this engine.
+
+No module may implement its own authorization logic.
+
+---
+
+# Purpose
+
+The engine provides:
+
+* Role-Based Access Control (RBAC)
+* Attribute-Based Access Control (ABAC)
+* Scope-Based Access Control
+* Policy Evaluation
+* Field-Level Security
+* Record-Level Security
+* Workflow Authorization
+* AI Authorization
+
+---
+
+# Core Principles
+
+## Default Deny
+
+No access unless explicitly granted.
+
+---
+
+## Least Privilege
+
+Users receive minimum permissions required.
+
+---
+
+## Scope Aware
+
+Permissions are always evaluated within organizational scope.
+
+---
+
+## Policy Driven
+
+Business rules enforced through policies.
+
+Not hardcoded logic.
+
+---
+
+## Audit First
+
+Every authorization decision is auditable.
+
+---
+
+# Authorization Architecture
+
+```text
+User Request
+      │
+      ▼
+Authentication
+      │
+      ▼
+Organization Context
+      │
+      ▼
+RBAC Evaluation
+      │
+      ▼
+ABAC Evaluation
+      │
+      ▼
+Scope Evaluation
+      │
+      ▼
+Policy Evaluation
+      │
+      ▼
+Access Decision
+```
+
+---
+
+# Access Decision Formula
+
+```text
+User
++
+Role
++
+Permissions
++
+Attributes
++
+Scope
++
+Policies
+=
+Access Decision
+```
+
+---
+
+# Permission Types
+
+## System Permissions
+
+Control platform access.
+
+Examples:
+
+system.admin
+
+system.settings.manage
+
+system.audit.read
+
+---
+
+## Module Permissions
+
+Control module actions.
+
+Examples:
+
+crm.customer.read
+
+crm.customer.create
+
+crm.customer.update
+
+crm.customer.delete
+
+---
+
+## Workflow Permissions
+
+Control workflow actions.
+
+Examples:
+
+workflow.approve
+
+workflow.reject
+
+workflow.delegate
+
+---
+
+## AI Permissions
+
+Control AI capabilities.
+
+Examples:
+
+ai.chat.use
+
+ai.report.generate
+
+ai.customer.create
+
+ai.finance.forecast
+
+---
+
+# RBAC Model
+
+Role-Based Access Control.
+
+---
+
+## Role Structure
+
+Examples:
+
+Super Admin
+
+Organization Admin
+
+CEO
+
+CFO
+
+Finance Manager
+
+HR Manager
+
+Sales Manager
+
+Employee
+
+Customer
+
+Vendor
+
+Partner
+
+---
+
+## Role Assignment
+
+Users may have multiple roles.
+
+Example:
+
+```text
+John
+ ├── Finance Manager
+ └── Procurement Approver
+```
+
+---
+
+## Permission Assignment
+
+Roles contain permissions.
+
+Example:
+
+Finance Manager
+
+↓
+
+finance.invoice.read
+
+finance.invoice.approve
+
+finance.payment.execute
+
+---
+
+# ABAC Model
+
+Attribute-Based Access Control.
+
+Used for fine-grained decisions.
+
+---
+
+## User Attributes
+
+Examples:
+
+Department
+
+Business Unit
+
+Location
+
+Employment Type
+
+Grade
+
+Region
+
+Country
+
+---
+
+## Resource Attributes
+
+Examples:
+
+Owner
+
+Department
+
+Business Unit
+
+Classification
+
+Status
+
+---
+
+## Environment Attributes
+
+Examples:
+
+Time
+
+Location
+
+Device
+
+IP Address
+
+Authentication Method
+
+---
+
+## Example Rule
+
+```text
+Allow
+
+IF
+
+User.Department = Finance
+
+AND
+
+Resource.Department = Finance
+```
+
+---
+
+# Scope Model
+
+Tnvios permissions operate within scope.
+
+---
+
+## Scope Levels
+
+Tenant
+
+Organization
+
+Business Unit
+
+Department
+
+Team
+
+Personal
+
+---
+
+## Example
+
+Permission:
+
+finance.invoice.read
+
+Scope:
+
+Department
+
+Result:
+
+User can read invoices belonging to their department only.
+
+---
+
+# Scope Hierarchy
+
+```text
+Tenant
+│
+Organization
+│
+Business Unit
+│
+Department
+│
+Team
+│
+Personal
+```
+
+Higher scopes inherit lower scopes.
+
+---
+
+# Policy Engine
+
+Policies define business rules.
+
+Policies are evaluated after permissions.
+
+---
+
+# Policy Types
+
+## Access Policies
+
+Determine visibility.
+
+Example:
+
+Only HR can view salary data.
+
+---
+
+## Approval Policies
+
+Determine approval requirements.
+
+Example:
+
+Invoices > $10,000 require CFO approval.
+
+---
+
+## Security Policies
+
+Determine security requirements.
+
+Example:
+
+Finance actions require MFA.
+
+---
+
+## Data Policies
+
+Determine data access.
+
+Example:
+
+Medical records restricted to healthcare staff.
+
+---
+
+## AI Policies
+
+Determine AI capabilities.
+
+Example:
+
+AI cannot export payroll data.
+
+---
+
+# Policy Structure
+
+Example:
+
+```json
+{
+  "name": "invoice_approval",
+  "condition": {
+    "amount": ">10000"
+  },
+  "action": {
+    "requireApproval": true,
+    "role": "CFO"
+  }
+}
+```
+
+---
+
+# Record-Level Security
+
+Controls access to specific records.
+
+Examples:
+
+Customer
+
+Employee
+
+Invoice
+
+Project
+
+Vendor
+
+Partner
+
+---
+
+## Example
+
+Sales Manager
+
+Can access:
+
+Assigned Customers
+
+Cannot access:
+
+Unassigned Customers
+
+---
+
+# Field-Level Security
+
+Controls access to individual fields.
+
+---
+
+## Sensitive Fields
+
+Salary
+
+Tax Number
+
+National ID
+
+Medical Information
+
+Bank Account
+
+Executive Notes
+
+---
+
+## Example
+
+Employee Record
+
+```text
+Name
+Department
+Salary
+Tax ID
+```
+
+Employee can view:
+
+Name
+
+Department
+
+HR can view:
+
+All fields
+
+---
+
+# Data Classification
+
+Every field and resource classified.
+
+---
+
+## Public
+
+Marketing Content
+
+Public Documents
+
+---
+
+## Internal
+
+Policies
+
+Procedures
+
+Reports
+
+---
+
+## Confidential
+
+Customer Data
+
+Vendor Data
+
+Employee Data
+
+---
+
+## Restricted
+
+Payroll
+
+Medical Records
+
+Banking Data
+
+Tax Data
+
+Executive Data
+
+---
+
+# Organizational Access Rules
+
+The Organization Engine provides access boundaries.
+
+---
+
+## Examples
+
+### CEO
+
+Access:
+
+Entire organization
+
+---
+
+### Department Head
+
+Access:
+
+Department only
+
+---
+
+### Employee
+
+Access:
+
+Personal data
+
+Assigned resources
+
+---
+
+# Customer Access Rules
+
+Customers can access:
+
+Own Projects
+
+Own Invoices
+
+Own Tickets
+
+Own Documents
+
+---
+
+Customers cannot access:
+
+Other customer data
+
+Internal operations
+
+---
+
+# Vendor Access Rules
+
+Vendors can access:
+
+Assigned Purchase Orders
+
+Invoices
+
+Contracts
+
+Payments
+
+---
+
+# Partner Access Rules
+
+Partners can access:
+
+Assigned Opportunities
+
+Commissions
+
+Resources
+
+Training
+
+---
+
+# Workflow Authorization
+
+Permissions alone do not authorize workflow actions.
+
+Workflow policies also apply.
+
+---
+
+## Example
+
+Employee
+
+Has:
+
+expense.create
+
+Can create expense.
+
+Cannot approve expense.
+
+---
+
+Manager
+
+Has:
+
+expense.approve
+
+Can approve expense.
+
+---
+
+# Separation of Duties
+
+Required for enterprise compliance.
+
+---
+
+## Example
+
+Requester
+
+Cannot be
+
+Approver
+
+---
+
+## Examples
+
+Payroll
+
+Payments
+
+Procurement
+
+User Provisioning
+
+---
+
+# AI Authorization
+
+AI acts on behalf of users.
+
+AI never receives elevated permissions.
+
+---
+
+## AI Request Flow
+
+```text
+User
+ ↓
+Permission Engine
+ ↓
+AI Tool
+ ↓
+Action
+```
+
+---
+
+## Example
+
+User cannot create invoice.
+
+AI cannot create invoice.
+
+---
+
+# Delegation Model
+
+Users may delegate authority.
+
+Examples:
+
+Vacation Coverage
+
+Temporary Manager
+
+Acting CFO
+
+---
+
+Delegations:
+
+Time Limited
+
+Auditable
+
+Revocable
+
+---
+
+# Emergency Access
+
+Break Glass Access.
+
+For emergencies only.
+
+Requirements:
+
+Approval
+
+Justification
+
+Full Audit Trail
+
+Automatic Expiration
+
+---
+
+# Audit Requirements
+
+Every decision logged.
+
+---
+
+## Audit Data
+
+User
+
+Permission
+
+Policy
+
+Resource
+
+Decision
+
+Timestamp
+
+Reason
+
+---
+
+# Performance Requirements
+
+Permission Check:
+
+< 20ms
+
+Policy Evaluation:
+
+< 50ms
+
+Full Authorization:
+
+< 100ms
+
+---
+
+# Database Entities
+
+Core Tables
+
+roles
+
+permissions
+
+role_permissions
+
+user_roles
+
+policies
+
+policy_rules
+
+delegations
+
+resource_permissions
+
+field_permissions
+
+authorization_logs
+
+---
+
+# API Contract
+
+Authorization Service
+
+```text
+POST /internal/v1/authz/evaluate
+```
+
+Request:
+
+```json
+{
+  "userId": "...",
+  "permission": "finance.invoice.read",
+  "resourceId": "...",
+  "scope": "department"
+}
+```
+
+Response:
+
+```json
+{
+  "allowed": true,
+  "reason": "Role + Policy Match"
+}
+```
+
+---
+
+# Governance Rules
+
+No module may:
+
+Bypass Permission Engine
+
+Bypass Policy Engine
+
+Implement custom authorization
+
+Modify authorization decisions
+
+Grant permissions directly
+
+---
+
+# Golden Rule
+
+Access is granted only when:
+
+Authentication Passed
+
+AND
+
+Role Permission Exists
+
+AND
+
+Scope Matches
+
+AND
+
+Attributes Match
+
+AND
+
+Policies Allow
+
+AND
+
+Security Requirements Satisfied
+
+Only then may Tnvios authorize the action.
+
+---
+
+# Shared Service Authorization Requirements
+
+The Permission & Policy Engine must authorize all enterprise shared services.
+
+Required permission families:
+
+```text
+onboarding.flow.manage
+onboarding.progress.read
+help.article.manage
+activity.read
+comment.create
+comment.update
+comment.delete
+comment.mention
+inbound_email.action.execute
+import.create
+import.review
+export.create
+export.download
+```
+
+Comments and mentions must not leak restricted entity names, fields, or URLs.
+
+Exports must enforce field-level security before file generation.
+
+Inbound email actions must be denied unless sender identity, reply token, tenant context, entity access, permission, and workflow policy are all valid.

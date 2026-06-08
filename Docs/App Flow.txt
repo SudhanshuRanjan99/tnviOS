@@ -1,0 +1,1074 @@
+# Tnvios Application Flow Document (AFD)
+
+Version: 1.0
+
+Status: System Flow Specification
+
+---
+
+# 1. Purpose
+
+This document defines the application flow of Tnvios.
+
+It describes:
+
+* User journeys
+* Organization setup
+* Module installation
+* Permission assignment
+* Workflow execution
+* AI interactions
+* Customer interactions
+* Vendor interactions
+* Partner interactions
+
+The objective is to ensure a consistent experience across the entire platform.
+
+---
+
+# 2. High-Level Application Flow
+
+```text
+Landing Page
+      │
+      ▼
+Organization Registration
+      │
+      ▼
+Organization Setup Wizard
+      │
+      ▼
+Tnvios Dashboard
+      │
+      ├── Headquarters Layer
+      ├── Business Unit Layer
+      ├── Department Layer
+      ├── Employee Layer
+      ├── Customer Layer
+      ├── Vendor Layer
+      ├── Partner Layer
+      └── AI Layer
+```
+
+---
+
+# 3. New Organization Onboarding Flow
+
+## Step 1: Registration
+
+User enters:
+
+* Company Name
+* Email
+* Password
+* Country
+* Industry
+
+System creates:
+
+* Organization
+* Primary Admin
+* Default Workspace
+
+---
+
+## Step 2: Verification
+
+User verifies:
+
+* Email
+* MFA Setup
+
+---
+
+## Step 3: Organization Wizard
+
+Collect:
+
+* Company Profile
+* Departments
+* Business Units
+* Initial Employees
+
+---
+
+## Step 4: Module Selection
+
+Organization chooses:
+
+* CRM
+* Projects
+* Finance
+* Documents
+* HR
+* Training
+
+Selected modules installed automatically.
+
+---
+
+## Step 5: Dashboard Access
+
+User enters Tnvios.
+
+---
+
+# 4. Login Flow
+
+## Authentication
+
+User enters:
+
+Email
+
+Password
+
+↓
+
+MFA
+
+↓
+
+Session Validation
+
+↓
+
+Permission Loading
+
+↓
+
+Dashboard
+
+---
+
+# 5. Dashboard Selection Flow
+
+Tnvios automatically determines user context.
+
+Example:
+
+```text
+CEO
+ ↓
+Headquarters Dashboard
+
+HR Manager
+ ↓
+HR Dashboard
+
+Employee
+ ↓
+Workspace Dashboard
+
+Customer
+ ↓
+Customer Portal
+
+Vendor
+ ↓
+Vendor Portal
+```
+
+---
+
+# 6. Headquarters Layer Flow
+
+Target Users:
+
+* Chairman
+* CEO
+* CFO
+* Directors
+
+---
+
+## Headquarters Dashboard
+
+Displays:
+
+* Revenue
+* Profit
+* Business Units
+* Risks
+* Strategic KPIs
+
+---
+
+## Navigation
+
+Headquarters
+
+├── Governance
+
+├── Treasury
+
+├── Analytics
+
+├── Risk
+
+├── AI Board Advisor
+
+└── Business Units
+
+---
+
+## Business Unit Drill Down
+
+User selects:
+
+Business Unit
+
+↓
+
+Operations Dashboard
+
+↓
+
+Department Analysis
+
+↓
+
+Detailed Reports
+
+---
+
+# 7. Business Unit Flow
+
+Target Users:
+
+* Business Unit CEO
+* Business Unit Managers
+
+---
+
+## Dashboard
+
+Displays:
+
+Revenue
+
+Projects
+
+Sales
+
+Employees
+
+Expenses
+
+---
+
+## Navigation
+
+Business Unit
+
+├── Sales
+
+├── Projects
+
+├── HR
+
+├── Finance
+
+├── Analytics
+
+└── AI Operations
+
+---
+
+# 8. Department Flow
+
+Target Users:
+
+Department Managers
+
+---
+
+## Dashboard
+
+Displays:
+
+Department KPIs
+
+Tasks
+
+Budget
+
+Performance
+
+---
+
+## Navigation
+
+Department
+
+├── Team Members
+
+├── Tasks
+
+├── Resources
+
+├── Approvals
+
+└── Reports
+
+---
+
+# 9. Employee Flow
+
+Target Users:
+
+Employees
+
+---
+
+## Workspace Dashboard
+
+Displays:
+
+My Tasks
+
+My Calendar
+
+My Approvals
+
+My Documents
+
+Notifications
+
+AI Assistant
+
+---
+
+## Employee Actions
+
+Request Leave
+
+↓
+
+Manager Approval
+
+↓
+
+HR Approval
+
+↓
+
+Leave Granted
+
+---
+
+## Expense Submission
+
+Create Expense
+
+↓
+
+Manager Approval
+
+↓
+
+Finance Approval
+
+↓
+
+Reimbursement
+
+---
+
+# 10. Customer Flow
+
+Target Users:
+
+Customers
+
+---
+
+## Customer Registration
+
+Customer invited or self-registers.
+
+---
+
+## Customer Dashboard
+
+Displays:
+
+Services
+
+Projects
+
+Invoices
+
+Tickets
+
+Documents
+
+AI Support Agent
+
+---
+
+## Service Request Flow
+
+Create Request
+
+↓
+
+Assignment
+
+↓
+
+Execution
+
+↓
+
+Customer Approval
+
+↓
+
+Completion
+
+---
+
+# 11. Vendor Flow
+
+Target Users:
+
+Suppliers
+
+---
+
+## Vendor Registration
+
+Submit Information
+
+↓
+
+Verification
+
+↓
+
+Approval
+
+↓
+
+Vendor Activated
+
+---
+
+## Procurement Flow
+
+Purchase Order
+
+↓
+
+Vendor Accepts
+
+↓
+
+Delivery
+
+↓
+
+Invoice Submission
+
+↓
+
+Payment
+
+---
+
+## Vendor Dashboard
+
+Orders
+
+Invoices
+
+Payments
+
+Performance
+
+Documents
+
+---
+
+# 12. Partner Flow
+
+Target Users:
+
+Resellers
+
+Distributors
+
+Consultants
+
+Agencies
+
+---
+
+## Partner Dashboard
+
+Leads
+
+Opportunities
+
+Commissions
+
+Training
+
+Resources
+
+---
+
+## Partner Opportunity Flow
+
+Lead Assigned
+
+↓
+
+Partner Engagement
+
+↓
+
+Sale Completed
+
+↓
+
+Commission Generated
+
+---
+
+# 13. Module Installation Flow
+
+Admin
+
+↓
+
+Marketplace
+
+↓
+
+Select Module
+
+↓
+
+Install
+
+↓
+
+Permissions Generated
+
+↓
+
+Menus Generated
+
+↓
+
+Database Migration
+
+↓
+
+Module Activated
+
+---
+
+# 14. Workflow Engine Flow
+
+## Generic Workflow
+
+Trigger
+
+↓
+
+Condition
+
+↓
+
+Approval
+
+↓
+
+Execution
+
+↓
+
+Notification
+
+↓
+
+Audit Log
+
+---
+
+## Example
+
+Invoice Created
+
+↓
+
+Manager Approval
+
+↓
+
+Finance Approval
+
+↓
+
+Payment
+
+↓
+
+Completion
+
+---
+
+# 15. Permission Flow
+
+User Request
+
+↓
+
+Authentication
+
+↓
+
+Role Evaluation
+
+↓
+
+Permission Evaluation
+
+↓
+
+Policy Evaluation
+
+↓
+
+Access Granted
+
+or
+
+Access Denied
+
+---
+
+# 16. Notification Flow
+
+Event Occurs
+
+↓
+
+Notification Engine
+
+↓
+
+Channel Selection
+
+↓
+
+Delivery
+
+↓
+
+Tracking
+
+---
+
+Channels:
+
+Email
+
+SMS
+
+Push
+
+In-App
+
+---
+
+# 17. Audit Flow
+
+User Action
+
+↓
+
+Audit Engine
+
+↓
+
+Log Creation
+
+↓
+
+Storage
+
+↓
+
+Searchable History
+
+---
+
+# 18. Search Flow
+
+User Searches
+
+↓
+
+Search Engine
+
+↓
+
+Permission Filtering
+
+↓
+
+Module Aggregation
+
+↓
+
+Results
+
+---
+
+# 19. AI Layer Flow
+
+## AI Interaction Entry Points
+
+Available Everywhere.
+
+Examples:
+
+Dashboard
+
+CRM
+
+Finance
+
+Projects
+
+HR
+
+Customer Portal
+
+Vendor Portal
+
+Partner Portal
+
+---
+
+## AI Request Flow
+
+User Question
+
+↓
+
+AI Gateway
+
+↓
+
+Permission Validation
+
+↓
+
+Context Retrieval
+
+↓
+
+Knowledge Retrieval
+
+↓
+
+AI Processing
+
+↓
+
+Response
+
+↓
+
+Audit Log
+
+---
+
+# 20. AI Board Advisor Flow
+
+CEO asks:
+
+"Which business unit is underperforming?"
+
+↓
+
+Analytics Engine
+
+↓
+
+Business Data
+
+↓
+
+AI Analysis
+
+↓
+
+Recommendation
+
+↓
+
+Dashboard Display
+
+---
+
+# 21. AI CFO Flow
+
+Request:
+
+"Forecast cash flow for next quarter"
+
+↓
+
+Financial Data
+
+↓
+
+Forecast Model
+
+↓
+
+Analysis
+
+↓
+
+Report
+
+---
+
+# 22. AI Customer Agent Flow
+
+Customer asks:
+
+"Where is my order?"
+
+↓
+
+Customer Context
+
+↓
+
+Order Lookup
+
+↓
+
+Response
+
+↓
+
+Conversation Saved
+
+---
+
+# 23. Cross-Module Event Flow
+
+Example:
+
+Customer Created
+
+↓
+
+CRM Event
+
+↓
+
+Finance Module
+
+↓
+
+Support Module
+
+↓
+
+Analytics Module
+
+↓
+
+AI Module
+
+All systems remain synchronized through events.
+
+---
+
+# 24. Logout Flow
+
+User Logout
+
+↓
+
+Session Revocation
+
+↓
+
+Token Revocation
+
+↓
+
+Audit Log
+
+↓
+
+Redirect
+
+---
+
+# 25. Future Flow
+
+Tnvios Marketplace
+
+↓
+
+Third-Party Modules
+
+↓
+
+AI Agents
+
+↓
+
+Industry Templates
+
+↓
+
+No-Code Builders
+
+↓
+
+Tnvios Ecosystem
+
+---
+
+# Final Application Flow Summary
+
+Tnvios operates through a hierarchical structure:
+
+Group Headquarters
+
+↓
+
+Business Unit
+
+↓
+
+Department
+
+↓
+
+Employee
+
+↕ Customers
+
+↕ Vendors
+
+↕ Partners
+
+↕ AI Agents
+
+All actions pass through:
+
+Identity Engine
+
+Permission Engine
+
+Workflow Engine
+
+Audit Engine
+
+Analytics Engine
+
+AI Engine
+
+allowing every user and every module to operate within a single enterprise operating system.
+
+---
+
+# Enterprise Platform Experience Flows
+
+Tnvios includes enterprise-grade experience flows in addition to module-specific flows.
+
+## Onboarding Flow
+
+Organization registration
+↓
+Email verification
+↓
+MFA setup
+↓
+Company profile
+↓
+Business units
+↓
+Departments
+↓
+Teams
+↓
+Users
+↓
+Roles and permissions
+↓
+Module setup
+↓
+Workspace activation
+
+## Contextual Guidance Flow
+
+User opens page
+↓
+System resolves role, module, permission, and page context
+↓
+Relevant help content, tours, empty states, and AI guidance are displayed
+↓
+Progress is saved per user
+
+## Activity Timeline Flow
+
+Business action occurs
+↓
+Audit log and domain event are created
+↓
+Activity Feed Engine creates timeline entry
+↓
+Entry becomes visible based on permission and record access
+
+## Comments and Mentions Flow
+
+User comments on entity
+↓
+System validates entity access
+↓
+System validates mentioned users can access the entity
+↓
+Notifications are created
+↓
+Activity timeline is updated
+
+## Email-to-Action Flow
+
+Inbound email received
+↓
+Sender and signed reply token validated
+↓
+Tenant, organization, user, entity, and action resolved
+↓
+Permission and workflow policy checked
+↓
+Action executed or routed for review
+↓
+Audit log and event created
+
+## Import / Export Flow
+
+User uploads or requests data
+↓
+Permission and field-level security checked
+↓
+Background job created
+↓
+Validation, mapping, import/export, file generation, and audit are processed
+↓
+Result file and activity entry are created

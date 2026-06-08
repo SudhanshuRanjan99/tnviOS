@@ -1,0 +1,821 @@
+# Tnvios Module SDK Specification
+
+Version: 1.0
+
+Status: Platform Architecture
+
+Classification: Core Framework
+
+---
+
+# Purpose
+
+The Module SDK defines how modules are built, installed, managed, secured, and integrated within Tnvios.
+
+All modules must use the SDK.
+
+No module may bypass SDK standards.
+
+Examples:
+
+CRM
+
+HR
+
+Finance
+
+Payroll
+
+Projects
+
+Travel
+
+Healthcare
+
+Manufacturing
+
+Marketplace
+
+AI Agents
+
+Third-Party Extensions
+
+---
+
+# Core Philosophy
+
+Tnvios Core owns:
+
+Identity
+
+Organizations
+
+Permissions
+
+Security
+
+Workflows
+
+Notifications
+
+Files
+
+Search
+
+Analytics
+
+AI
+
+Modules consume platform services.
+
+Modules never reimplement platform services.
+
+---
+
+# Module Architecture
+
+Every module is:
+
+Independent
+
+Versioned
+
+Installable
+
+Upgradeable
+
+Removable
+
+Permission Aware
+
+Tenant Aware
+
+Event Driven
+
+---
+
+# Module Structure
+
+```text
+module/
+│
+├── manifest.json
+│
+├── backend/
+│   ├── controllers/
+│   ├── services/
+│   ├── events/
+│   ├── permissions/
+│   ├── workflows/
+│   └── migrations/
+│
+├── frontend/
+│   ├── pages/
+│   ├── widgets/
+│   ├── routes/
+│   └── navigation/
+│
+├── assets/
+│
+└── tests/
+```
+
+---
+
+# Module Manifest
+
+Required file:
+
+manifest.json
+
+Example:
+
+```json
+{
+  "name": "crm",
+  "displayName": "CRM",
+  "version": "1.0.0",
+  "description": "Customer Relationship Management",
+  "author": "Tnvios",
+  "dependencies": [],
+  "permissions": [
+    "crm.customer.read",
+    "crm.customer.create"
+  ]
+}
+```
+
+---
+
+# Module Metadata
+
+Required Fields
+
+name
+
+displayName
+
+version
+
+description
+
+author
+
+---
+
+Optional Fields
+
+icon
+
+category
+
+license
+
+homepage
+
+support
+
+repository
+
+---
+
+# Module Lifecycle
+
+States:
+
+Draft
+
+Installed
+
+Enabled
+
+Disabled
+
+Upgrading
+
+Removed
+
+---
+
+# Module Installation Flow
+
+Marketplace
+
+↓
+
+Download
+
+↓
+
+Verify Signature
+
+↓
+
+Dependency Validation
+
+↓
+
+Database Migration
+
+↓
+
+Permission Registration
+
+↓
+
+Route Registration
+
+↓
+
+Menu Registration
+
+↓
+
+Enable
+
+---
+
+# Module Registration API
+
+Every module must export:
+
+```typescript
+export default defineModule({
+  manifest,
+  routes,
+  permissions,
+  navigation,
+  events
+});
+```
+
+---
+
+# Backend Registration
+
+Modules can register:
+
+Controllers
+
+Services
+
+Workers
+
+Event Handlers
+
+Commands
+
+---
+
+# Route Registration
+
+Example:
+
+```typescript
+registerRoute({
+  path: "/crm/customers",
+  controller: CustomerController
+});
+```
+
+---
+
+# Frontend Registration
+
+Modules can register:
+
+Pages
+
+Widgets
+
+Navigation
+
+Dashboards
+
+Commands
+
+---
+
+# Navigation Registration
+
+Example:
+
+```typescript
+registerNavigation({
+  label: "Customers",
+  path: "/crm/customers",
+  icon: "users"
+});
+```
+
+---
+
+# Permission Registration
+
+Modules declare permissions.
+
+Example:
+
+```typescript
+registerPermissions([
+  "crm.customer.read",
+  "crm.customer.create",
+  "crm.customer.update",
+  "crm.customer.delete"
+]);
+```
+
+---
+
+# Security Requirements
+
+Every module must:
+
+Use platform authentication.
+
+Use platform authorization.
+
+Use platform audit logging.
+
+Use platform encryption.
+
+Use platform workflows.
+
+Direct implementations are forbidden.
+
+---
+
+# Database Requirements
+
+Modules own their tables.
+
+Example:
+
+CRM
+
+crm_customers
+
+crm_leads
+
+crm_opportunities
+
+---
+
+Finance
+
+finance_invoices
+
+finance_payments
+
+finance_accounts
+
+---
+
+# Naming Convention
+
+Format:
+
+module_entity
+
+Examples:
+
+crm_customers
+
+hr_employees
+
+finance_invoices
+
+---
+
+# Multi-Tenant Rules
+
+Every business table must contain:
+
+tenant_id
+
+organization_id
+
+created_at
+
+updated_at
+
+created_by
+
+updated_by
+
+---
+
+# Migration System
+
+Modules register migrations.
+
+Example:
+
+```typescript
+registerMigration({
+  version: "1.0.0",
+  up() {},
+  down() {}
+});
+```
+
+---
+
+# Event System
+
+Modules communicate through events.
+
+Never through direct module dependencies.
+
+---
+
+# Event Registration
+
+Example:
+
+```typescript
+registerEvent(
+  "crm.customer.created"
+);
+```
+
+---
+
+# Event Subscription
+
+Example:
+
+```typescript
+subscribe(
+  "crm.customer.created",
+  handler
+);
+```
+
+---
+
+# Standard Events
+
+customer.created
+
+customer.updated
+
+employee.created
+
+invoice.created
+
+invoice.paid
+
+project.created
+
+task.completed
+
+workflow.completed
+
+---
+
+# Workflow Integration
+
+Modules may register workflows.
+
+Example:
+
+```typescript
+registerWorkflow({
+  name: "Invoice Approval"
+});
+```
+
+---
+
+# Notification Integration
+
+Modules publish notifications.
+
+Example:
+
+```typescript
+sendNotification({
+  userId,
+  title,
+  message
+});
+```
+
+Uses platform Notification Engine.
+
+---
+
+# Search Integration
+
+Modules register searchable entities.
+
+Example:
+
+```typescript
+registerSearchEntity({
+  entity: "customer"
+});
+```
+
+Global Search automatically indexes data.
+
+---
+
+# Dashboard Integration
+
+Modules can expose widgets.
+
+Example:
+
+```typescript
+registerWidget({
+  name: "Sales Revenue"
+});
+```
+
+Widgets can appear on:
+
+Executive Dashboard
+
+Department Dashboard
+
+Workspace Dashboard
+
+---
+
+# Analytics Integration
+
+Modules can publish metrics.
+
+Example:
+
+```typescript
+publishMetric({
+  key: "crm.leads.created",
+  value: 100
+});
+```
+
+Analytics Engine consumes metrics.
+
+---
+
+# AI Integration
+
+Modules expose AI tools.
+
+Example:
+
+```typescript
+registerAITool({
+  name: "Create Customer"
+});
+```
+
+AI agents can safely interact with modules.
+
+---
+
+# AI Permission Enforcement
+
+AI must obey:
+
+User Permissions
+
+Organization Context
+
+Tenant Context
+
+Data Policies
+
+---
+
+# File Integration
+
+Modules use File Engine.
+
+Example:
+
+```typescript
+attachFile(
+  entityId,
+  fileId
+);
+```
+
+Files never stored directly by modules.
+
+---
+
+# Audit Integration
+
+Modules must log:
+
+Create
+
+Update
+
+Delete
+
+Approval
+
+Export
+
+Download
+
+---
+
+# API Standards
+
+Every module API must follow:
+
+```text
+/api/v1/module/resource
+```
+
+Examples:
+
+/api/v1/crm/customers
+
+/api/v1/hr/employees
+
+/api/v1/finance/invoices
+
+---
+
+# API Response Standard
+
+Success:
+
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+Failure:
+
+```json
+{
+  "success": false,
+  "error": {}
+}
+```
+
+---
+
+# UI Standards
+
+Modules must use:
+
+Platform Design System
+
+Platform Components
+
+Platform Layouts
+
+Platform Themes
+
+Custom UI frameworks prohibited.
+
+---
+
+# Testing Requirements
+
+Every module must provide:
+
+Unit Tests
+
+Integration Tests
+
+Migration Tests
+
+Permission Tests
+
+---
+
+# Module Marketplace Requirements
+
+Before publishing:
+
+Security Scan
+
+Dependency Validation
+
+Code Quality Validation
+
+Compatibility Check
+
+Signature Generation
+
+---
+
+# Versioning
+
+Semantic Versioning
+
+Examples:
+
+1.0.0
+
+1.1.0
+
+2.0.0
+
+---
+
+# Dependency Management
+
+Example:
+
+```json
+{
+  "dependencies": [
+    "crm",
+    "workflow-engine"
+  ]
+}
+```
+
+Circular dependencies prohibited.
+
+---
+
+# Enterprise Module Rules
+
+Modules must never:
+
+Access another tenant.
+
+Access restricted fields.
+
+Bypass permissions.
+
+Bypass workflows.
+
+Bypass audit logging.
+
+Bypass encryption.
+
+---
+
+# SDK Layers
+
+```text
+Tnvios Core
+│
+├── Identity SDK
+├── Security SDK
+├── Workflow SDK
+├── Notification SDK
+├── Search SDK
+├── Analytics SDK
+├── File SDK
+├── AI SDK
+└── Module SDK
+```
+
+Every module builds on these SDKs.
+
+---
+
+# Long-Term Vision
+
+Tnvios modules become:
+
+Installable
+
+Versioned
+
+Marketplace Ready
+
+AI Enabled
+
+Enterprise Secure
+
+Multi-Tenant Aware
+
+allowing first-party and third-party developers to build complete business applications on top of Tnvios without modifying the core platform.
+
+---
+
+# Enterprise Shared Service Integration Rules
+
+Every module must integrate with Tnvios shared platform services.
+
+Modules may register:
+
+* onboarding steps
+* help contexts
+* activity event mappings
+* commentable entities
+* mentionable entity rules
+* import templates
+* export templates
+* inbound email action handlers
+
+Modules may not implement independent systems for onboarding, contextual help, activity timelines, comments, mentions, inbound email actions, imports, or exports.
+
+All module integrations must enforce tenant isolation, organization isolation, permissions, policies, audit logging, and event publishing.

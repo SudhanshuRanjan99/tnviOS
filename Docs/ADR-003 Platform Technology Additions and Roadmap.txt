@@ -1,0 +1,33 @@
+# ADR-003: Platform Technology Additions and Roadmap
+
+Status: Accepted
+
+Add now:
+
+* BullMQ for background jobs
+* OpenTelemetry SDK for observability
+* Vitest for unit and integration tests
+* Playwright for end-to-end tests
+* Turborepo for monorepo orchestration
+* Resend as default transactional email provider behind an Email Provider abstraction
+* pgvector for AI semantic retrieval and embeddings
+* Vercel AI SDK for AI Gateway, streaming AI UX, and tool calling
+* Tiptap for rich text editing
+* Typesense for user-facing search
+
+Planned Phase 2/3:
+
+* Temporal.io for durable workflow execution behind the Tnvios Workflow Engine
+* Novu as optional notification infrastructure/provider behind the Tnvios Notification Engine
+* Yjs for collaborative CRDT document state
+* PartyKit and ElectricSQL for realtime collaboration and local-first/offline sync if required
+* ClickHouse for analytics, event analytics, audit analytics, telemetry, AI usage analytics, and large-scale reporting projections
+
+Excluded for now:
+
+* Trigger.dev
+* Inngest
+
+Rule:
+
+Trigger.dev or Inngest may only be reconsidered if BullMQ and/or Temporal are removed from the architecture.

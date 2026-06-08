@@ -1,0 +1,836 @@
+# Tnvios API Standards
+
+Version: 1.0
+
+Status: Platform Standard
+
+Classification: Architecture Standard
+
+---
+
+# Purpose
+
+This document defines API standards for all Tnvios services, modules, AI agents, mobile applications, and third-party integrations.
+
+Goals:
+
+* Consistency
+* Security
+* Scalability
+* Versioning
+* Discoverability
+* Developer Experience
+
+All APIs must follow this standard.
+
+---
+
+# API Architecture
+
+Tnvios uses:
+
+REST APIs (Primary)
+
+Event APIs (Internal)
+
+Webhooks (External)
+
+GraphQL (Future)
+
+AI Tool APIs (Future)
+
+---
+
+# API Principles
+
+## Resource Based
+
+APIs represent business resources.
+
+Good:
+
+```text
+/customers
+/projects
+/invoices
+```
+
+Bad:
+
+```text
+/createCustomer
+/getAllProjects
+```
+
+---
+
+## Predictable
+
+Every module follows the same conventions.
+
+---
+
+## Versioned
+
+Every API must be versioned.
+
+Format:
+
+```text
+/api/v1/
+```
+
+Example:
+
+```text
+/api/v1/crm/customers
+```
+
+---
+
+## Stateless
+
+Every request contains all required context.
+
+No server-side API state.
+
+---
+
+# URL Structure
+
+Format:
+
+```text
+/api/v{version}/{module}/{resource}
+```
+
+Examples:
+
+```text
+/api/v1/crm/customers
+
+/api/v1/hr/employees
+
+/api/v1/finance/invoices
+
+/api/v1/projects/tasks
+```
+
+---
+
+# HTTP Methods
+
+GET
+
+Retrieve resources.
+
+POST
+
+Create resources.
+
+PUT
+
+Replace resources.
+
+PATCH
+
+Partial updates.
+
+DELETE
+
+Soft delete resources.
+
+---
+
+# Resource Naming
+
+Use plural nouns.
+
+Good:
+
+```text
+/customers
+
+/employees
+
+/invoices
+```
+
+Bad:
+
+```text
+/customer
+
+/getCustomers
+```
+
+---
+
+# CRUD Standards
+
+Create
+
+```http
+POST /api/v1/crm/customers
+```
+
+Read
+
+```http
+GET /api/v1/crm/customers/{id}
+```
+
+Update
+
+```http
+PATCH /api/v1/crm/customers/{id}
+```
+
+Delete
+
+```http
+DELETE /api/v1/crm/customers/{id}
+```
+
+---
+
+# Response Standard
+
+Every response follows the same structure.
+
+---
+
+## Success Response
+
+```json
+{
+  "success": true,
+  "data": {},
+  "meta": {}
+}
+```
+
+---
+
+## Collection Response
+
+```json
+{
+  "success": true,
+  "data": [],
+  "meta": {
+    "page": 1,
+    "pageSize": 25,
+    "total": 100
+  }
+}
+```
+
+---
+
+## Error Response
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "CUSTOMER_NOT_FOUND",
+    "message": "Customer not found"
+  }
+}
+```
+
+---
+
+# Error Codes
+
+Structure:
+
+```text
+MODULE_ERROR_NAME
+```
+
+Examples:
+
+```text
+CRM_CUSTOMER_NOT_FOUND
+
+FINANCE_INVOICE_NOT_FOUND
+
+AUTH_INVALID_TOKEN
+
+HR_EMPLOYEE_NOT_FOUND
+```
+
+---
+
+# Pagination Standard
+
+Query Parameters:
+
+```text
+?page=1
+&pageSize=25
+```
+
+Maximum:
+
+```text
+100
+```
+
+records per request.
+
+---
+
+# Filtering Standard
+
+Format:
+
+```text
+?status=active
+```
+
+Multiple filters:
+
+```text
+?status=active&type=corporate
+```
+
+---
+
+# Sorting Standard
+
+Format:
+
+```text
+?sort=name
+```
+
+Descending:
+
+```text
+?sort=-createdAt
+```
+
+---
+
+# Search Standard
+
+Format:
+
+```text
+?q=john
+```
+
+Example:
+
+```text
+/api/v1/crm/customers?q=john
+```
+
+---
+
+# Field Selection
+
+Format:
+
+```text
+?fields=id,name,email
+```
+
+Reduces payload size.
+
+---
+
+# Authentication
+
+Supported:
+
+JWT
+
+OIDC
+
+SAML
+
+API Keys
+
+---
+
+# Authorization
+
+Every endpoint requires:
+
+Authentication
+
+Permission Validation
+
+Tenant Validation
+
+Organization Validation
+
+---
+
+# Request Headers
+
+Required:
+
+```http
+Authorization: Bearer TOKEN
+```
+
+```http
+X-Tenant-ID
+```
+
+```http
+X-Organization-ID
+```
+
+Optional:
+
+```http
+X-Business-Unit-ID
+```
+
+```http
+X-Department-ID
+```
+
+---
+
+# Tenant Context
+
+Every request must include:
+
+Tenant Context
+
+Organization Context
+
+User Context
+
+System validates all three.
+
+---
+
+# Validation Standard
+
+All requests validated before processing.
+
+---
+
+## Input Validation
+
+Required For:
+
+Body
+
+Query
+
+Params
+
+Headers
+
+Files
+
+---
+
+## Validation Errors
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "fields": {
+      "email": [
+        "Invalid email"
+      ]
+    }
+  }
+}
+```
+
+---
+
+# Soft Delete Standard
+
+Records are never physically deleted.
+
+Required fields:
+
+```sql
+deleted_at
+deleted_by
+```
+
+DELETE APIs mark records deleted.
+
+---
+
+# Audit Standard
+
+Every mutation must create an audit record.
+
+Tracked:
+
+Create
+
+Update
+
+Delete
+
+Approve
+
+Reject
+
+Export
+
+Download
+
+---
+
+# Workflow Integration
+
+Actions requiring approval:
+
+Payroll
+
+Invoices
+
+Procurement
+
+Finance
+
+must trigger Workflow Engine.
+
+APIs cannot bypass workflows.
+
+---
+
+# File Upload Standard
+
+Endpoint:
+
+```text
+/api/v1/files
+```
+
+Response:
+
+```json
+{
+  "fileId": "uuid"
+}
+```
+
+Files stored through File Engine only.
+
+---
+
+# Event Publishing Standard
+
+Mutating APIs publish events.
+
+Examples:
+
+```text
+customer.created
+
+invoice.paid
+
+employee.created
+
+project.completed
+```
+
+---
+
+# Idempotency Standard
+
+Required for:
+
+Payments
+
+Procurement
+
+Invoices
+
+Financial Operations
+
+Header:
+
+```http
+Idempotency-Key
+```
+
+---
+
+# Rate Limiting
+
+Default:
+
+100 requests/minute/user
+
+Organization limits configurable.
+
+---
+
+# API Documentation
+
+All APIs must be documented.
+
+Format:
+
+OpenAPI 3.1
+
+Swagger Generation Required
+
+---
+
+# Module API Standards
+
+Module APIs must use:
+
+```text
+/api/v1/{module}/{resource}
+```
+
+Examples:
+
+```text
+/api/v1/crm/customers
+
+/api/v1/hr/employees
+
+/api/v1/projects/tasks
+```
+
+---
+
+# Internal Service APIs
+
+Internal APIs use:
+
+```text
+/internal/v1/
+```
+
+Not publicly exposed.
+
+Examples:
+
+```text
+/internal/v1/permissions
+
+/internal/v1/workflows
+
+/internal/v1/notifications
+```
+
+---
+
+# Webhook Standards
+
+Outbound events:
+
+```text
+customer.created
+
+invoice.paid
+
+employee.created
+```
+
+Payload:
+
+```json
+{
+  "event": "customer.created",
+  "timestamp": "ISO_DATE",
+  "data": {}
+}
+```
+
+Signed using webhook secret.
+
+---
+
+# AI API Standards
+
+AI actions must be explicit.
+
+Example:
+
+```http
+POST /api/v1/ai/chat
+```
+
+```http
+POST /api/v1/ai/tools/create-customer
+```
+
+AI actions always:
+
+Validate permissions
+
+Validate tenant
+
+Create audit logs
+
+---
+
+# Performance Requirements
+
+GET Requests
+
+< 200ms average
+
+Mutation Requests
+
+< 500ms average
+
+Search
+
+< 500ms average
+
+---
+
+# Security Requirements
+
+Every endpoint must:
+
+Authenticate
+
+Authorize
+
+Validate Tenant
+
+Validate Organization
+
+Audit Action
+
+Apply Rate Limits
+
+Sanitize Input
+
+Validate Output
+
+---
+
+# API Maturity Levels
+
+Level 1
+
+CRUD APIs
+
+---
+
+Level 2
+
+Workflow APIs
+
+---
+
+Level 3
+
+Event APIs
+
+---
+
+Level 4
+
+AI Tool APIs
+
+---
+
+Level 5
+
+Marketplace APIs
+
+---
+
+# API Governance
+
+No module may:
+
+Bypass authentication
+
+Bypass authorization
+
+Bypass audit logging
+
+Bypass workflows
+
+Bypass tenant validation
+
+Bypass rate limiting
+
+Bypass security policies
+
+All APIs must use Tnvios Core API SDK.
+
+---
+
+# Golden Rule
+
+Every request must pass through:
+
+Authentication
+
+↓
+
+Tenant Validation
+
+↓
+
+Permission Validation
+
+↓
+
+Workflow Validation
+
+↓
+
+Business Logic
+
+↓
+
+Audit Logging
+
+↓
+
+Event Publishing
+
+↓
+
+Response
+
+before returning data to the client.
+
+---
+
+# Enterprise Platform API Addendum
+
+Tnvios APIs must support full enterprise platform capabilities across every module.
+
+Required shared APIs:
+
+```text
+/api/v1/onboarding/flows
+/api/v1/onboarding/progress
+/api/v1/help/contexts
+/api/v1/help/tours
+/api/v1/activity
+/api/v1/comments
+/api/v1/comments/{id}/mentions
+/api/v1/inbound-email/messages
+/api/v1/imports
+/api/v1/exports
+```
+
+Import/export APIs must enforce tenant isolation, organization isolation, record-level permissions, field-level permissions, audit logging, background job processing, signed file URLs, and event publishing.
+
+Inbound email APIs must validate signed reply tokens, sender identity, tenant context, entity access, action permission, attachment safety, and audit requirements before executing any action.
+
+Comments and mentions APIs must validate that mentioned users can access the target entity before notifications are sent.

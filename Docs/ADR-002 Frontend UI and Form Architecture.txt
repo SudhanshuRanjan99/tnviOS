@@ -1,0 +1,13 @@
+# ADR-002: Frontend UI and Form Architecture
+
+Status: Accepted
+
+Tnvios uses Tailwind CSS as the utility styling layer, shadcn/ui as the base component source, Radix UI primitives where applicable, and Tnvios UI Kit as the governed design system exported from @tnvios/ui.
+
+Tnvios does not use raw Tailwind as a design system. Modules must import shared UI components from @tnvios/ui and must not create independent visual patterns.
+
+Forms are handled by the Tnvios Platform Form Engine using controlled components and Zod validation. React Hook Form is not the platform form standard.
+
+Reason:
+
+Tnvios forms require draft states, auto-save, approval submission, workflow transitions, field-level permissions, audit trails, comments, attachments, and module-defined schemas. A platform-owned form engine integrates these concerns directly with the Permission Engine, Workflow Engine, Audit Engine, and Event Engine.

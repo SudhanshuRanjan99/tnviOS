@@ -1,0 +1,192 @@
+name: tnvios
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tnvios
+      POSTGRES_PASSWORD: tnvios
+      POSTGRES_USER: tnvios
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tnvios -d tnvios"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+  redis:
+    image: redis:8.2-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5
+    restart: unless-stopped
+    command: ["start-dev", "--import-realm", "--health-enabled=true"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_DB: postgres
+      KC_DB_PASSWORD: tnvios
+      KC_DB_SCHEMA: keycloak
+      KC_DB_URL: jdbc:postgresql://postgres:5432/tnvios
+      KC_DB_USERNAME: tnvios
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:9001:9000"
+    volumes:
+      - ./infrastructure/keycloak/realms:/opt/keycloak/data/import:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200 OK' <&3",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - tnvios
+
+  typesense:
+    image: typesense/typesense:30.1
+    restart: unless-stopped
+    command: ["--data-dir=/data", "--api-key=replace-with-local-key", "--enable-cors"]
+    ports:
+      - "127.0.0.1:8108:8108"
+    volumes:
+      - typesense_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8108/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_PASSWORD: replace-with-local-secret
+      MINIO_ROOT_USER: tnvios
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9002:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
+    restart: "no"
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "mc alias set local http://minio:9000 tnvios replace-with-local-secret && mc mb --ignore-existing local/tnvios",
+      ]
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - tnvios
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.148.0
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    ports:
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+      - "127.0.0.1:8889:8889"
+    volumes:
+      - ./infrastructure/observability/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    depends_on:
+      prometheus:
+        condition: service_started
+    networks:
+      - tnvios
+
+  prometheus:
+    image: prom/prometheus:v3.10.0
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./infrastructure/observability/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+  grafana:
+    image: grafana/grafana:12.4.1
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "127.0.0.1:3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/observability/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health | grep -q ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
+networks:
+  tnvios:
+    driver: bridge
+
+volumes:
+  grafana_data:
+  minio_data:
+  postgres_data:
+  prometheus_data:
+  redis_data:
+  typesense_data:

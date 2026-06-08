@@ -1,0 +1,22 @@
+{
+  "realm": "tnvios",
+  "enabled": true,
+  "displayName": "Tnvios",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "verifyEmail": false,
+  "clients": [
+    {
+      "clientId": "tnvios-api",
+      "name": "Tnvios API",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "replace-with-local-secret",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ]
+}

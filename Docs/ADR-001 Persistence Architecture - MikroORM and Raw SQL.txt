@@ -1,0 +1,59 @@
+# ADR-001: Persistence Architecture — MikroORM + Raw SQL
+
+Status: Approved
+
+Decision:
+
+Tnvios uses MikroORM as the primary ORM for transactional domain logic and raw SQL for reporting, analytics, dashboards, complex reads, bulk operations, recursive hierarchy queries, audit search, event replay, and performance-critical queries.
+
+Rationale:
+
+Tnvios is a modular enterprise platform with organization hierarchy, permissions, workflows, audit, events, AI actions, and module-owned tables. The platform needs enterprise persistence patterns such as Data Mapper, Unit of Work, Identity Map, explicit transaction boundaries, repositories, and controlled migrations. MikroORM provides a better fit for transactional domain modeling than a lightweight SQL-first ORM alone.
+
+Raw SQL remains required because not all platform queries should be modeled through ORM entity graphs. Reporting, analytics, permission-heavy search, dashboards, materialized views, recursive hierarchy resolution, and bulk operations require direct PostgreSQL control.
+
+Rules:
+
+1. Use MikroORM for transactional writes and domain consistency.
+2. Use MikroORM repositories for simple entity reads.
+3. Use MikroORM QueryBuilder for controlled complex reads where appropriate.
+4. Use raw SQL for reporting, analytics, dashboards, audit search, permission-filtered search, bulk operations, recursive hierarchy queries, materialized views, and event replay.
+5. Do not use lazy loading.
+6. Do not use Active Record.
+7. Do not enable automatic schema synchronization in production.
+8. Do not use deep cross-module ORM entity relations as module boundaries.
+9. Every multi-table business mutation must run inside an explicit transaction boundary.
+10. Audit logs and outbox events must be written in the same transaction as the business mutation.
+
+Required Platform Components:
+
+* DatabaseModule
+* TransactionManager
+* BaseRepository
+* TenantContext
+* AuditRepository
+* OutboxRepository
+* QueryService layer
+* Raw SQL registry
+* ModuleMigrationRunner
+* MigrationRegistry
+
+Recommended Data Access Split:
+
+```text
+Transactional domain logic:
+MikroORM EntityManager + Unit of Work
+
+Simple entity reads:
+MikroORM repositories
+
+Controlled complex reads:
+MikroORM QueryBuilder
+
+Reports, analytics, dashboards, search, bulk operations:
+Raw SQL
+```
+
+Final Rule:
+
+MikroORM manages domain persistence. Raw SQL manages complex platform reads and high-control PostgreSQL operations. Tnvios must not depend on ORM magic for module boundaries, authorization, audit, events, reporting, or analytics.

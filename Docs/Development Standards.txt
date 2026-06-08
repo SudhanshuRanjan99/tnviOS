@@ -1,0 +1,1020 @@
+# Tnvios Development Standards
+
+Version: 1.0
+
+Status: Engineering Governance Standard
+
+Classification: Mandatory
+
+---
+
+# Purpose
+
+This document defines coding, architecture, testing, security, deployment, documentation, and operational standards for all Tnvios development.
+
+Applies to:
+
+* Core Platform
+* Core Engines
+* Modules
+* AI Components
+* APIs
+* Frontend Applications
+* Mobile Applications
+* Infrastructure
+
+---
+
+# Engineering Principles
+
+## Platform First
+
+Always build reusable platform capabilities before module-specific solutions.
+
+Good:
+
+Workflow Engine
+
+Notification Engine
+
+Audit Engine
+
+Permission Engine
+
+Bad:
+
+CRM-specific approval system
+
+HR-specific notification system
+
+---
+
+## Modular First
+
+Every business feature belongs to a module.
+
+Core platform should remain minimal.
+
+---
+
+## Security First
+
+Security is a requirement.
+
+Not a future enhancement.
+
+---
+
+## Tenant First
+
+Every business feature must support:
+
+Tenant Isolation
+
+Organization Isolation
+
+Permission Isolation
+
+---
+
+## AI Ready
+
+Every module must be designed to support:
+
+AI Search
+
+AI Agents
+
+AI Automation
+
+Future AI Workflows
+
+---
+
+# Technology Standards
+
+## Backend
+
+Framework:
+
+NestJS
+
+Language:
+
+TypeScript
+
+Runtime:
+
+Node.js LTS
+
+---
+
+## Frontend
+
+Framework:
+
+Next.js
+
+Language:
+
+TypeScript
+
+Styling Layer:
+
+Tailwind CSS
+
+Base Component Source:
+
+shadcn/ui
+
+Component Primitives:
+
+Radix UI where applicable
+
+Design System:
+
+Tnvios UI Kit exported from @tnvios/ui
+
+Forms:
+
+Tnvios Platform Form Engine using controlled components
+
+Validation:
+
+Zod
+
+Rich Text Editor:
+
+Tiptap
+
+Server State:
+
+TanStack Query
+
+Rules:
+
+Modules must import shared UI from @tnvios/ui.
+
+Modules must not create custom buttons, tables, dialogs, drawers, forms, cards, layouts, or navigation primitives.
+
+Raw Tailwind is allowed inside packages/ui. Raw Tailwind inside business modules is restricted and must be reviewed.
+
+---
+
+## Database
+
+PostgreSQL
+
+Version:
+
+17+
+
+---
+
+## ORM / Persistence Layer
+
+Primary ORM:
+
+MikroORM
+
+Primary Pattern:
+
+Data Mapper
+
+Required ORM Capabilities:
+
+Unit of Work
+
+Identity Map
+
+Explicit Entity Manager Transactions
+
+Repository Pattern
+
+Migrations
+
+Raw SQL required for:
+
+Reporting
+
+Analytics
+
+Dashboards
+
+Permission-Filtered Search
+
+Bulk Operations
+
+Recursive Hierarchy Queries
+
+Performance-Critical Queries
+
+Rules:
+
+MikroORM is used for transactional domain logic.
+
+Raw SQL is used for reporting, analytics, complex reads, bulk operations, and performance-critical queries.
+
+Modules must not use deep cross-module entity relations as integration boundaries. Cross-module integration must use services, events, read models, or query services.
+
+Automatic schema synchronization is prohibited in production.
+
+Lazy loading is prohibited.
+
+Active Record pattern is prohibited.
+
+---
+
+## Cache, Queue, and Background Jobs
+
+Cache:
+
+Redis
+
+Background Jobs:
+
+BullMQ
+
+Rules:
+
+BullMQ is used for background jobs, scheduled work, retries, email delivery, file processing, imports, exports, report generation, webhook delivery, and asynchronous AI tasks.
+
+BullMQ is not the domain event bus. Domain events use Redis Streams first and Kafka later.
+
+---
+
+## Storage
+
+S3 Compatible
+
+---
+
+# Monorepo Structure
+
+Required structure:
+
+```text
+tnvios/
+│
+├── apps/
+│   ├── api/
+│   ├── web/
+│   └── admin/
+│
+├── modules/
+│   ├── crm/
+│   ├── finance/
+│   ├── hr/
+│   └── projects/
+│
+├── packages/
+│   ├── sdk/
+│   ├── ui/
+│   ├── security/
+│   ├── workflow/
+│   └── analytics/
+│
+├── infrastructure/
+│
+└── docs/
+```
+
+---
+
+# Naming Standards
+
+## Database Tables
+
+Format:
+
+```text
+module_entity
+```
+
+Examples:
+
+crm_customers
+
+finance_invoices
+
+hr_employees
+
+---
+
+## API Endpoints
+
+Format:
+
+```text
+/api/v1/module/resource
+```
+
+Examples:
+
+/api/v1/crm/customers
+
+/api/v1/hr/employees
+
+---
+
+## Event Names
+
+Format:
+
+```text
+module.entity.action
+```
+
+Examples:
+
+crm.customer.created
+
+finance.invoice.paid
+
+hr.employee.created
+
+---
+
+## Permission Names
+
+Format:
+
+```text
+module.resource.action
+```
+
+Examples:
+
+crm.customer.read
+
+finance.invoice.approve
+
+hr.salary.view
+
+---
+
+# TypeScript Standards
+
+## Strict Mode
+
+Mandatory.
+
+```json
+{
+  "strict": true
+}
+```
+
+---
+
+## Any Type
+
+Prohibited.
+
+Bad:
+
+```ts
+const data: any
+```
+
+Good:
+
+```ts
+const data: Customer
+```
+
+---
+
+## Interfaces
+
+Required for public contracts.
+
+---
+
+## DTOs
+
+Required for:
+
+Requests
+
+Responses
+
+Events
+
+Commands
+
+---
+
+# Code Organization
+
+## Feature-Based Structure
+
+Example:
+
+```text
+crm/
+│
+├── controllers
+├── services
+├── repositories
+├── dtos
+├── events
+├── permissions
+└── tests
+```
+
+---
+
+## Layering
+
+Allowed:
+
+Controller
+
+↓
+
+Service
+
+↓
+
+Repository
+
+↓
+
+Database
+
+Forbidden:
+
+Controller
+
+↓
+
+Database
+
+---
+
+# API Standards
+
+All APIs must follow:
+
+Tnvios API Standards
+
+Requirements:
+
+Versioned
+
+Authenticated
+
+Authorized
+
+Audited
+
+Documented
+
+---
+
+# Database Standards
+
+## UUIDv7
+
+Required.
+
+No auto-increment IDs.
+
+---
+
+## Soft Deletes
+
+Required.
+
+Columns:
+
+deleted_at
+
+deleted_by
+
+---
+
+## Audit Fields
+
+Required.
+
+created_at
+
+updated_at
+
+created_by
+
+updated_by
+
+---
+
+## Tenant Fields
+
+Required for business entities.
+
+tenant_id
+
+organization_id
+
+---
+
+# Security Standards
+
+## Authentication
+
+MFA Support Required.
+
+---
+
+## Authorization
+
+RBAC
+
+ABAC
+
+Mandatory.
+
+---
+
+## Secrets
+
+Never stored in source code.
+
+Use:
+
+Vault
+
+Cloud Secret Managers
+
+---
+
+## Encryption
+
+Sensitive fields encrypted.
+
+Examples:
+
+Bank Accounts
+
+Tax IDs
+
+National IDs
+
+Medical Records
+
+---
+
+# Logging Standards
+
+## Structured Logs
+
+JSON Format.
+
+Required Fields:
+
+timestamp
+
+requestId
+
+tenantId
+
+userId
+
+service
+
+level
+
+message
+
+---
+
+## Correlation IDs
+
+Required on every request.
+
+---
+
+# Audit Standards
+
+Must log:
+
+Create
+
+Update
+
+Delete
+
+Approve
+
+Reject
+
+Export
+
+Download
+
+---
+
+# Event Standards
+
+Every business action emits events.
+
+Examples:
+
+customer.created
+
+invoice.paid
+
+employee.created
+
+---
+
+## Event Payload
+
+Required:
+
+eventId
+
+eventType
+
+timestamp
+
+tenantId
+
+data
+
+---
+
+# Testing Standards
+
+## Unit Tests
+
+Required.
+
+Coverage:
+
+Minimum 80%
+
+---
+
+## Integration Tests
+
+Required.
+
+---
+
+## Permission Tests
+
+Required.
+
+Every protected endpoint tested.
+
+---
+
+## Multi-Tenant Tests
+
+Required.
+
+Verify tenant isolation.
+
+---
+
+## Security Tests
+
+Required.
+
+Authentication
+
+Authorization
+
+Rate Limits
+
+Validation
+
+---
+
+# Frontend Standards
+
+## Design System
+
+All modules use:
+
+Tnvios Design System
+
+Custom UI libraries prohibited.
+
+---
+
+## Accessibility
+
+WCAG AA minimum.
+
+---
+
+## Responsive Design
+
+Required.
+
+Desktop
+
+Tablet
+
+Mobile
+
+---
+
+# Documentation Standards
+
+Every feature requires:
+
+PRD Reference
+
+Technical Design
+
+API Documentation
+
+Test Cases
+
+Release Notes
+
+---
+
+# Git Standards
+
+## Branching Strategy
+
+main
+
+develop
+
+feature/*
+
+hotfix/*
+
+release/*
+
+---
+
+## Commit Convention
+
+Format:
+
+```text
+type(scope): description
+```
+
+Examples:
+
+feat(crm): add customer import
+
+fix(auth): resolve token refresh issue
+
+---
+
+# Pull Request Standards
+
+Required:
+
+Code Review
+
+Passing Tests
+
+Security Check
+
+Documentation Updated
+
+---
+
+# CI/CD Standards
+
+Pipeline Steps:
+
+Lint
+
+↓
+
+Type Check
+
+↓
+
+Unit Tests
+
+↓
+
+Integration Tests
+
+↓
+
+Security Scan
+
+↓
+
+Build
+
+↓
+
+Deploy
+
+---
+
+# Performance Standards
+
+API:
+
+< 200ms average
+
+Search:
+
+< 500ms
+
+Dashboard:
+
+< 3s
+
+---
+
+# Platform Tooling Standards
+
+## Monorepo Build System
+
+Turborepo is required for builds, development, linting, type checking, tests, package orchestration, and cacheable monorepo tasks.
+
+## Observability Stack
+
+OpenTelemetry SDK is required for traces, metrics, and logs across API requests, workflows, jobs, event handlers, AI actions, email delivery, and imports/exports.
+
+Every request, event, job, workflow, and AI action must carry a correlation ID.
+
+## Testing Stack
+
+Vitest is required for unit tests, integration tests, service tests, policy tests, workflow logic tests, schema tests, and form engine tests.
+
+Playwright is required for end-to-end browser tests across onboarding, organization setup, module flows, permission denial, workflow approvals, file uploads, imports, exports, and portal experiences.
+
+Database integration tests must use a real PostgreSQL test database through Docker or Testcontainers.
+
+## Email Provider Standard
+
+Resend is the default transactional email provider.
+
+Tnvios must use an Email Provider abstraction. Modules may not call Resend directly. Future providers include Amazon SES, SMTP, SendGrid, Mailgun, and tenant-specific email gateways.
+
+## AI, Search, and Content Stack
+
+pgvector is required for embeddings, semantic retrieval, AI memory, and RAG over tenant-filtered data.
+
+Vercel AI SDK is required for AI Gateway integration, streaming AI responses, tool calling, and AI user experience.
+
+Typesense is the default user-facing search engine for fast search, autocomplete, faceting, filtering, and module search.
+
+Tiptap is the standard rich text editor for documents, notes, comments, knowledge base, reports, templates, and AI-generated content.
+
+## Planned Phase 2/3 Technologies
+
+Temporal.io is reserved for durable long-running workflow execution behind the Tnvios Workflow Engine.
+
+Novu is reserved as a possible notification infrastructure/provider behind the Tnvios Notification Engine.
+
+Yjs is reserved for collaborative document state and CRDT-based editing.
+
+PartyKit and ElectricSQL are reserved for realtime collaboration and local-first/offline sync if required.
+
+ClickHouse is reserved for analytics, event analytics, audit analytics, telemetry, AI usage analytics, and large-scale reporting projections.
+
+Trigger.dev and Inngest are excluded unless BullMQ and/or Temporal are removed from the architecture.
+
+---
+
+# Observability Standards
+
+## Metrics
+
+Prometheus
+
+---
+
+## Dashboards
+
+Grafana
+
+---
+
+## Tracing
+
+OpenTelemetry
+
+Required for:
+
+API Calls
+
+Workflows
+
+AI Actions
+
+Module Events
+
+---
+
+# AI Standards
+
+AI actions must:
+
+Respect permissions
+
+Respect tenant boundaries
+
+Generate audit logs
+
+Generate events
+
+Never bypass workflows
+
+---
+
+# Module Standards
+
+Every module must:
+
+Register permissions
+
+Register routes
+
+Register events
+
+Register migrations
+
+Register navigation
+
+Provide tests
+
+Provide documentation
+
+---
+
+# Code Review Checklist
+
+Verify:
+
+Architecture Compliance
+
+Security Compliance
+
+Permission Validation
+
+Tenant Isolation
+
+Audit Logging
+
+Tests
+
+Documentation
+
+Performance Impact
+
+---
+
+# Definition of Done
+
+A feature is complete only if:
+
+Code Implemented
+
+Tests Passing
+
+Documentation Updated
+
+Permissions Added
+
+Audit Logging Added
+
+Events Published
+
+Security Review Passed
+
+Performance Validated
+
+Deployment Successful
+
+Monitoring Added
+
+---
+
+# Golden Rule
+
+Every feature, module, API, workflow, AI agent, and user action must be:
+
+Secure
+
+Tenant Aware
+
+Permission Aware
+
+Auditable
+
+Tested
+
+Documented
+
+Observable
+
+before it can be merged into Tnvios.

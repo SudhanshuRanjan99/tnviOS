@@ -1,0 +1,36 @@
+{
+  "name": "tnvios",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": "9.15.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
+    "docker:config": "docker compose config --quiet",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs --follow",
+    "docker:up": "docker compose up --detach --wait",
+    "env:validate": "pnpm --filter @tnvios/config build && node packages/config/dist/cli.js",
+    "env:validate:example": "pnpm env:validate .env.example",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "turbo run lint",
+    "lint:root": "eslint .",
+    "migration:status": "pnpm --filter @tnvios/database migration:status",
+    "migration:up": "pnpm --filter @tnvios/database migration:up",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@tnvios/eslint-config": "workspace:*",
+    "eslint": "10.4.1",
+    "prettier": "3.8.3",
+    "turbo": "2.9.16",
+    "typescript": "5.9.3"
+  }
+}
