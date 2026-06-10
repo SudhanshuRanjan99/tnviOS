@@ -23,6 +23,7 @@ export const environmentSchema = z
     KEYCLOAK_ISSUER_URL: url,
     KEYCLOAK_CLIENT_ID: requiredString,
     KEYCLOAK_CLIENT_SECRET: requiredString,
+    KEYCLOAK_WEBHOOK_SECRET: requiredString,
     JWT_AUDIENCE: requiredString,
     S3_ENDPOINT: url,
     S3_ACCESS_KEY: requiredString,
@@ -31,6 +32,7 @@ export const environmentSchema = z
     TYPESENSE_HOST: url,
     TYPESENSE_API_KEY: requiredString,
     RESEND_API_KEY: requiredString,
+    NOTIFICATION_EMAIL_FROM: requiredString,
     OTEL_EXPORTER_OTLP_ENDPOINT: url,
   })
   .readonly();

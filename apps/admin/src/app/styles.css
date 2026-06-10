@@ -1,0 +1,379 @@
+:root {
+  color-scheme: light dark;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #f5f5f2;
+  color: #20231f;
+  --accent: #9b4d21;
+  --accent-soft: #f5e4d8;
+  --border: #d9d9d2;
+  --muted: #686b64;
+  --sidebar: #1c211d;
+  --surface: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.4rem;
+  background: var(--accent);
+  color: white;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.admin-frame {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 250px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--sidebar);
+  color: #f3f4ef;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.55rem;
+  background: var(--accent);
+  color: white;
+  place-items: center;
+}
+
+.brand small {
+  display: block;
+  margin-top: 0.1rem;
+  color: #aeb8b0;
+  font-size: 0.67rem;
+  font-weight: 500;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 3rem;
+}
+
+.sidebar nav a {
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.45rem;
+  color: #bac3bc;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a:focus-visible,
+.sidebar nav a[aria-current="page"] {
+  background: #ffffff12;
+  color: white;
+}
+
+.sidebar-note {
+  margin-top: auto;
+  color: #98a39b;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.workspace {
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 74px;
+  padding: 1rem clamp(1.25rem, 4vw, 4rem);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar p {
+  margin-bottom: 0.2rem;
+}
+
+.topbar div > span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.environment-badge {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+main {
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 4vw, 4rem);
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 0.75fr);
+  gap: 3rem;
+  align-items: end;
+  padding-bottom: 5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 850px;
+  margin-bottom: 1.2rem;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: -0.065em;
+  line-height: 0.98;
+}
+
+h2 {
+  max-width: 680px;
+  margin-bottom: 0;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  letter-spacing: -0.045em;
+}
+
+.overview-copy {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.status-panel {
+  padding: 1.3rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+}
+
+.status-panel span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.status-panel strong {
+  display: block;
+  margin: 0.5rem 0;
+  font-size: 1.65rem;
+}
+
+.status-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.administration-section {
+  padding: 4rem 0 5rem;
+  border-top: 1px solid var(--border);
+}
+
+.section-heading {
+  margin-bottom: 2rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.admin-card {
+  min-height: 210px;
+  padding: 1.4rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.admin-card > span {
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-card h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.65rem;
+  font-size: 1.15rem;
+}
+
+.admin-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.readiness-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  padding: 3rem;
+  background: var(--accent-soft);
+}
+
+.readiness-section ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.readiness-section li {
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #9b4d2140;
+}
+
+.readiness-section li span {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem clamp(1.25rem, 4vw, 4rem) 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+:focus-visible {
+  outline: 3px solid #df9a56;
+  outline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    background: #111310;
+    color: #f0f2ed;
+    --accent: #e28a50;
+    --accent-soft: #332218;
+    --border: #393d37;
+    --muted: #abb1a9;
+    --surface: #191c18;
+  }
+}
+
+@media (max-width: 920px) {
+  .admin-frame {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    padding: 1rem 1.25rem;
+  }
+
+  .sidebar nav {
+    display: flex;
+    overflow-x: auto;
+    margin-top: 1.2rem;
+  }
+
+  .sidebar-note {
+    display: none;
+  }
+
+  .overview,
+  .readiness-section {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar {
+    min-height: auto;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .readiness-section {
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+}

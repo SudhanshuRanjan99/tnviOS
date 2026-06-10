@@ -21,6 +21,25 @@ services:
     networks:
       - tnvios
 
+  postgres-test:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tnvios
+      POSTGRES_PASSWORD: tnvios
+      POSTGRES_USER: tnvios
+    ports:
+      - "127.0.0.1:5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tnvios -d tnvios"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+    networks:
+      - tnvios
+
   redis:
     image: redis:8.2-alpine
     restart: unless-stopped

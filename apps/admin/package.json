@@ -1,0 +1,29 @@
+{
+  "name": "@tnvios/admin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port 3002",
+    "lint": "eslint .",
+    "start": "next start --port 3002",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "next": "16.2.7",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@tnvios/eslint-config": "workspace:*",
+    "@tnvios/typescript-config": "workspace:*",
+    "@types/node": "25.9.2",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "10.4.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

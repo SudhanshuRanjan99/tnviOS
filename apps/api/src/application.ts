@@ -1,7 +1,8 @@
-import { ValidationPipe, type INestApplication } from "@nestjs/common";
+import { RequestMethod, ValidationPipe, type INestApplication } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
 import { AppModule } from "./app.module.js";
+import { NestStructuredLogger } from "./logging/api-logger.js";
 
 export const API_GLOBAL_PREFIX = "api/v1";
 export const DEFAULT_API_HOST = "0.0.0.0";
@@ -41,7 +42,22 @@ export function parseApiPort(value: string | undefined): number {
 }
 
 export function configureApplication(application: INestApplication): void {
-  application.setGlobalPrefix(API_GLOBAL_PREFIX);
+  application.setGlobalPrefix(API_GLOBAL_PREFIX, {
+    exclude: [
+      {
+        method: RequestMethod.POST,
+        path: "internal/v1/identity/keycloak/events",
+      },
+      {
+        method: RequestMethod.POST,
+        path: "internal/v1/events/outbox/process",
+      },
+      {
+        method: RequestMethod.POST,
+        path: "internal/v1/notifications",
+      },
+    ],
+  });
   application.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
@@ -55,6 +71,8 @@ export function configureApplication(application: INestApplication): void {
 export async function createApplication(): Promise<INestApplication> {
   const application = await NestFactory.create(AppModule, {
     abortOnError: true,
+    logger: new NestStructuredLogger(),
+    rawBody: true,
   });
 
   configureApplication(application);

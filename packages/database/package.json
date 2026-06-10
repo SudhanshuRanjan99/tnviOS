@@ -51,7 +51,7 @@
     "migration:status": "pnpm build && pnpm migration status",
     "migration:up": "pnpm build && pnpm migration up",
     "test": "vitest run",
-    "test:integration": "vitest run src/test-database.integration.test.ts",
+    "test:integration": "node --env-file-if-exists=../../.env.test ./node_modules/vitest/vitest.mjs run src/test-database.integration.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

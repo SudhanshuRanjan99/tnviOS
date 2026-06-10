@@ -1,0 +1,9 @@
+{
+  "extends": "@tnvios/typescript-config/nest.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "src",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}

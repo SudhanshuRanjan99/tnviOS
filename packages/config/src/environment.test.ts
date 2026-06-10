@@ -10,6 +10,7 @@ const validEnvironment = {
   KEYCLOAK_ISSUER_URL: "http://localhost:8080/realms/tnvios",
   KEYCLOAK_CLIENT_ID: "tnvios-api",
   KEYCLOAK_CLIENT_SECRET: "local-development-secret",
+  KEYCLOAK_WEBHOOK_SECRET: "local-webhook-secret",
   JWT_AUDIENCE: "tnvios-api",
   S3_ENDPOINT: "http://localhost:9000",
   S3_ACCESS_KEY: "tnvios",
@@ -18,6 +19,7 @@ const validEnvironment = {
   TYPESENSE_HOST: "http://localhost:8108",
   TYPESENSE_API_KEY: "local-development-key",
   RESEND_API_KEY: "local-development-key",
+  NOTIFICATION_EMAIL_FROM: "Tnvios <notifications@example.com>",
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4318",
 } as const;
 

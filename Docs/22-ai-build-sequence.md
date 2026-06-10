@@ -30,68 +30,68 @@ Full enterprise solution does not mean random order.
 
 1. NestJS API app shell. done
 2. Next.js web app shell. done
-3. Next.js admin app shell. 
-4. shared request context.
-5. structured logging.
-6. OpenTelemetry setup.
+3. Next.js admin app shell. done
+4. shared request context. done
+5. structured logging. done
+6. OpenTelemetry setup. done
 
 ### Phase 4: Identity and Auth
 
-1. Keycloak integration.
-2. JWT validation.
-3. user shadow table.
-4. Keycloak webhook sync endpoint.
-5. first-login provisioning.
-6. auth tests.
+1. Keycloak integration. done
+2. JWT validation. done
+3. user shadow table. done
+4. Keycloak webhook sync endpoint. done
+5. first-login provisioning. done
+6. auth tests. done
 
 ### Phase 5: Organization Engine
 
-1. tenants
-2. groups
-3. organizations
-4. business units
-5. departments
-6. teams
-7. memberships
-8. organization APIs
-9. tenant/org context resolver
+1. tenants. done
+2. groups. done
+3. organizations. done
+4. business units. done
+5. departments. done
+6. teams. done
+7. memberships. done
+8. organization APIs. done
+9. tenant/org context resolver. done
 
 ### Phase 6: Permission and Policy Engine
 
-1. permissions
-2. roles
-3. role permissions
-4. user roles
-5. scope evaluator
-6. authorization logs
-7. field-level security foundation
-8. record-level security foundation
+1. permissions. done
+2. roles. done
+3. role permissions. done
+4. user roles. done
+5. scope evaluator. done
+6. authorization logs. done
+7. field-level security foundation. done
+8. record-level security foundation. done
 
 ### Phase 7: Audit and Events
 
-1. audit logs
-2. outbox events
-3. event registry
-4. Redis Streams publisher
-5. outbox worker
-6. idempotent consumer framework
+1. audit logs. done
+2. outbox events. done
+3. event registry. done
+4. Redis Streams publisher. done
+5. outbox worker. done
+6. idempotent consumer framework. done
 
 ### Phase 8: Jobs and Notifications
 
-1. BullMQ setup
-2. job registry
-3. Notification Engine
-4. Resend provider
-5. in-app notifications
-6. email templates
+1. BullMQ setup. done
+2. job registry. done
+3. Notification Engine. done
+4. Resend provider. done
+5. in-app notifications. done
+6. email templates. done
 
 ### Phase 9: Files
 
-1. File Engine
-2. S3/MinIO provider
-3. signed URLs
-4. file permissions
-5. file audit
+1. File Engine. done
+2. S3/MinIO provider. done
+3. signed URLs. done
+4. file permissions. done
+5. file audit. done
 
 ### Phase 10: Search
 

@@ -1,5 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 
+import { PublicRoute } from "../auth/public-route.decorator.js";
+import { SkipOrganizationContext } from "../organization/context.decorator.js";
+
 export interface HealthResponse {
   readonly data: {
     readonly service: "api";
@@ -10,6 +13,8 @@ export interface HealthResponse {
 }
 
 @Controller("health")
+@PublicRoute()
+@SkipOrganizationContext()
 export class HealthController {
   @Get()
   getHealth(): HealthResponse {
