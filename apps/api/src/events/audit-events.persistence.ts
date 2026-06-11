@@ -1,6 +1,7 @@
 import { Injectable, type OnApplicationShutdown } from "@nestjs/common";
 import { AuditLog, AuditLogSchema } from "@tnvios/audit";
 import { validateEnvironment } from "@tnvios/config";
+import { CRM_SCHEMAS } from "@tnvios/crm";
 import { closeMikroOrm, initializeMikroOrm, type TnviosMikroOrm } from "@tnvios/database";
 import {
   ConsumerReceipt,
@@ -115,6 +116,7 @@ export class AuditEventsPersistence
       entities: [
         UserSchema,
         ...ORGANIZATION_SCHEMAS,
+        ...CRM_SCHEMAS,
         ...POLICY_SCHEMAS,
         ...NOTIFICATION_SCHEMAS,
         ...FILE_SCHEMAS,

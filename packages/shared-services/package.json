@@ -1,0 +1,34 @@
+{
+  "name": "@tnvios/shared-services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tnvios/database": "workspace:*",
+    "@tnvios/events": "workspace:*",
+    "@tnvios/jobs": "workspace:*"
+  },
+  "devDependencies": {
+    "@tnvios/eslint-config": "workspace:*",
+    "@tnvios/typescript-config": "workspace:*",
+    "@types/node": "25.9.2",
+    "eslint": "10.4.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

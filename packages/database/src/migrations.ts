@@ -57,10 +57,9 @@ export class MigrationRunner {
 
     try {
       const migrator = orm.migrator;
-      const [executed, pending] = await Promise.all([
-        migrator.getExecuted(),
-        migrator.getPending(),
-      ]);
+      // Both calls lazily initialize migration storage, so they must not race on a fresh database.
+      const executed = await migrator.getExecuted();
+      const pending = await migrator.getPending();
 
       return {
         executed: executed.map((migration) => migration.name),

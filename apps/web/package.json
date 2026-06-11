@@ -12,11 +12,15 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@tnvios/forms": "workspace:*",
+    "@tnvios/ui": "workspace:*",
     "next": "16.2.7",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "zod": "4.4.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "4.1.17",
     "@tnvios/eslint-config": "workspace:*",
     "@tnvios/typescript-config": "workspace:*",
     "@types/node": "25.9.2",

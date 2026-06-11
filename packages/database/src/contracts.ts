@@ -23,6 +23,13 @@ export type NotificationTemplateId = EntityId<"notification_template">;
 export type NotificationDeliveryId = EntityId<"notification_delivery">;
 export type FileId = EntityId<"file">;
 export type FilePermissionId = EntityId<"file_permission">;
+export type WorkflowDefinitionId = EntityId<"workflow_definition">;
+export type WorkflowVersionId = EntityId<"workflow_version">;
+export type WorkflowInstanceId = EntityId<"workflow_instance">;
+export type WorkflowTaskId = EntityId<"workflow_task">;
+export type WorkflowApprovalId = EntityId<"workflow_approval">;
+export type WorkflowEventId = EntityId<"workflow_event">;
+export type WorkflowAuditLogId = EntityId<"workflow_audit_log">;
 
 export interface IdentifiedEntity {
   id: EntityId;

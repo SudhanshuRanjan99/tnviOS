@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { loadEnvironmentFile } from "@tnvios/config";
 
@@ -7,10 +8,10 @@ import { MigrationRunner } from "./migrations.js";
 const action = process.argv[2] ?? "status";
 const migrationName = process.argv[3];
 const environmentFile = process.env.TNVIOS_ENV_FILE ?? ".env.local";
-const invocationDirectory = process.env.INIT_CWD ?? process.cwd();
+const repositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 try {
-  const environment = await loadEnvironmentFile(resolve(invocationDirectory, environmentFile));
+  const environment = await loadEnvironmentFile(resolve(repositoryRoot, environmentFile));
   const runner = new MigrationRunner({ environment, entities: [], debug: false });
 
   switch (action) {
@@ -40,7 +41,8 @@ try {
     default:
       throw new Error(`Unknown migration action "${action}"`);
   }
-} catch {
-  console.error(`Migration command "${action}" failed. Check the environment file and database.`);
+} catch (error) {
+  const message = error instanceof Error ? error.message : "Unknown migration error.";
+  console.error(`Migration command "${action}" failed: ${message}`);
   process.exitCode = 1;
 }

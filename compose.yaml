@@ -11,7 +11,7 @@ services:
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres17_data:/var/lib/postgresql/data
       - ./infrastructure/postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U tnvios -d tnvios"]
@@ -98,7 +98,11 @@ services:
     volumes:
       - typesense_data:/data
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8108/health"]
+      test:
+        [
+          "CMD-SHELL",
+          "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8108; printf \"GET /health HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q '\"'\"'ok'\"'\"' <&3'",
+        ]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -194,7 +198,8 @@ services:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health | grep -q ok"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 60
+      start_period: 60s
     networks:
       - tnvios
 
@@ -205,7 +210,7 @@ networks:
 volumes:
   grafana_data:
   minio_data:
-  postgres_data:
+  postgres17_data:
   prometheus_data:
   redis_data:
   typesense_data:

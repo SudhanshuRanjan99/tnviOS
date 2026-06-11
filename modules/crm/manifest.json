@@ -1,0 +1,21 @@
+{
+  "name": "crm",
+  "displayName": "CRM",
+  "version": "1.0.0",
+  "description": "Customer relationship and sales pipeline management",
+  "author": "Tnvios",
+  "dependencies": [],
+  "permissions": [
+    "crm.customer.read",
+    "crm.customer.create",
+    "crm.contact.read",
+    "crm.contact.create",
+    "crm.lead.read",
+    "crm.lead.create",
+    "crm.opportunity.read",
+    "crm.opportunity.create",
+    "crm.opportunity.close",
+    "crm.activity.read",
+    "crm.activity.create"
+  ]
+}

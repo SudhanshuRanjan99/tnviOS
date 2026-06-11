@@ -1,140 +1,80 @@
-const administrationAreas = [
-  {
-    description: "Manage platform-wide controls and operational defaults.",
-    label: "Platform administration",
-    signal: "Platform",
-  },
-  {
-    description: "Review tenants, lifecycle state, and administrative access.",
-    label: "Tenant administration",
-    signal: "Tenants",
-  },
-  {
-    description: "Configure organization structure and operating boundaries.",
-    label: "Organization setup",
-    signal: "Organizations",
-  },
-  {
-    description: "Control installed modules and platform capabilities.",
-    label: "Module management",
-    signal: "Modules",
-  },
-  {
-    description: "Review identity, authorization, and policy posture.",
-    label: "Security center",
-    signal: "Security",
-  },
-  {
-    description: "Inspect governed activity and administrative changes.",
-    label: "Audit center",
-    signal: "Audit",
-  },
-  {
-    description: "Manage shared platform defaults and operational preferences.",
-    label: "System settings",
-    signal: "Settings",
-  },
-] as const;
+import {
+  AppShell,
+  Badge,
+  Button,
+  DataTable,
+  Dialog,
+  DialogDescription,
+  DialogTitle,
+  EmptyState,
+  MetricCard,
+  PageHeader,
+  type DataColumn,
+} from "@tnvios/ui";
 
-const readinessItems = [
-  "Identity and access controls",
-  "Organization configuration",
-  "Module governance",
-  "Audit and security review",
+const navigation = [
+  { active: true, href: "#overview", icon: "dashboard", label: "Control center" },
+  { href: "#organization", icon: "organization", label: "Organizations" },
+  { href: "#people", icon: "people", label: "Identity & access" },
+  { href: "#security", icon: "security", label: "Security" },
+  { href: "#settings", icon: "settings", label: "Settings" },
 ] as const;
+const tenants = [
+  { id: "1", name: "Northstar Holdings", plan: "Enterprise", status: "Healthy", users: "1,284" },
+  { id: "2", name: "Summit Retail Group", plan: "Growth", status: "Review", users: "468" },
+  { id: "3", name: "Atlas Services", plan: "Enterprise", status: "Healthy", users: "892" },
+] as const;
+const columns: readonly DataColumn<(typeof tenants)[number]>[] = [
+  { key: "name", label: "Organization", render: (row) => <strong>{row.name}</strong> },
+  { key: "plan", label: "Plan" },
+  { key: "users", label: "Users" },
+  { key: "status", label: "Posture", render: (row) => <Badge>{row.status}</Badge> },
+];
 
 export default function AdminHomePage() {
   return (
-    <div className="admin-frame">
-      <aside className="sidebar" aria-label="Administration navigation">
-        <a className="brand" href="/" aria-label="Tnvios administration home">
-          <span aria-hidden="true" className="brand-mark">
-            T
-          </span>
-          <span>
-            Tnvios
-            <small>Administration</small>
-          </span>
-        </a>
-
-        <nav aria-label="Admin sections">
-          <a aria-current="page" href="#overview">
-            Overview
-          </a>
-          <a href="#administration">Administration</a>
-          <a href="#readiness">System readiness</a>
-        </nav>
-
-        <p className="sidebar-note">Access will be governed by platform permissions.</p>
-      </aside>
-
-      <div className="workspace">
-        <header className="topbar">
+    <AppShell navigation={navigation} product="Administration">
+      <PageHeader
+        actions={
+          <Dialog trigger={<Button>Add organization</Button>}>
+            <DialogTitle className="text-xl font-bold">Add organization</DialogTitle>
+            <DialogDescription className="mt-2 text-sm text-muted-foreground">
+              Organization provisioning will connect to onboarding and policy workflows.
+            </DialogDescription>
+            <div className="mt-6 flex justify-end">
+              <Button>Create draft</Button>
+            </div>
+          </Dialog>
+        }
+        description="Manage platform health, organization posture, and governed access from one control surface."
+        eyebrow="Platform administration"
+        title="Control center"
+      />
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" id="overview">
+        <MetricCard detail="all healthy" label="Organizations" trend="+3" value="42" />
+        <MetricCard detail="last 24 hours" label="Active users" trend="+8%" value="8,942" />
+        <MetricCard detail="need review" label="Policy findings" trend="4 open" value="17" />
+        <MetricCard detail="successful" label="Workflow executions" trend="99.8%" value="18.4k" />
+      </section>
+      <section className="mt-8">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="eyebrow">Control center</p>
-            <span>Administration shell</span>
+            <h2 className="text-lg font-semibold">Organization posture</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tenant health and administrative readiness.
+            </p>
           </div>
-          <span className="environment-badge">Foundation</span>
-        </header>
-
-        <main id="main-content">
-          <section className="overview" id="overview" aria-labelledby="overview-title">
-            <div>
-              <p className="eyebrow">Governed administration</p>
-              <h1 id="overview-title">Configure the platform with clarity and control.</h1>
-              <p className="overview-copy">
-                The Tnvios administration center brings platform setup, security, and governance
-                into one permission-aware workspace.
-              </p>
-            </div>
-            <div className="status-panel" aria-label="Shell status">
-              <span>Admin shell</span>
-              <strong>Ready</strong>
-              <p>Prepared for identity, organization, permissions, and audit engines.</p>
-            </div>
-          </section>
-
-          <section
-            className="administration-section"
-            id="administration"
-            aria-labelledby="administration-title"
-          >
-            <div className="section-heading">
-              <p className="eyebrow">Administrative domains</p>
-              <h2 id="administration-title">One control surface for platform operations.</h2>
-            </div>
-            <div className="admin-grid">
-              {administrationAreas.map((area) => (
-                <article className="admin-card" key={area.label}>
-                  <span>{area.signal}</span>
-                  <h3>{area.label}</h3>
-                  <p>{area.description}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="readiness-section" id="readiness" aria-labelledby="readiness-title">
-            <div>
-              <p className="eyebrow">Platform readiness</p>
-              <h2 id="readiness-title">Built for deliberate configuration.</h2>
-            </div>
-            <ol>
-              {readinessItems.map((item, index) => (
-                <li key={item}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  {item}
-                </li>
-              ))}
-            </ol>
-          </section>
-        </main>
-
-        <footer>
-          <span>Tnvios administration</span>
-          <span>Shell ready for platform engines</span>
-        </footer>
-      </div>
-    </div>
+          <Button variant="ghost">View directory</Button>
+        </div>
+        <DataTable columns={columns} rows={tenants} />
+      </section>
+      <section className="mt-8">
+        <EmptyState
+          action={<Button variant="outline">Review policy setup</Button>}
+          description="Critical identity, authorization, and audit alerts will appear here when detected."
+          title="No critical findings"
+        />
+      </section>
+    </AppShell>
   );
 }

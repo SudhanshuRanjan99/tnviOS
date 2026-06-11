@@ -1,0 +1,34 @@
+{
+  "name": "@tnvios/forms",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "react": "19.2.7",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@tnvios/eslint-config": "workspace:*",
+    "@tnvios/typescript-config": "workspace:*",
+    "@types/react": "19.2.17",
+    "eslint": "10.4.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  },
+  "peerDependencies": {
+    "react": "19.2.7",
+    "zod": "4.4.3"
+  }
+}

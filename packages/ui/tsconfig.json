@@ -1,0 +1,5 @@
+{
+  "extends": "@tnvios/typescript-config/nextjs.json",
+  "compilerOptions": { "noEmit": true, "rootDir": "src", "types": ["react"] },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

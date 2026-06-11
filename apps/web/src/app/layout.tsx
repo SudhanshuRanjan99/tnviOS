@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
-import "./styles.css";
+import "@tnvios/ui/styles.css";
 
 export const metadata: Metadata = {
   description: "Tnvios unified business workspace",
@@ -25,7 +25,7 @@ export interface RootLayoutProperties {
 
 export default function RootLayout({ children }: RootLayoutProperties) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <a className="skip-link" href="#main-content">
           Skip to main content
